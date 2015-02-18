@@ -1,4 +1,0 @@
-http://www.proba.jussieu.fr/~pages/projets/
-
-login: mc2015
-passwd: gauss2015
