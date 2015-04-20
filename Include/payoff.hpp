@@ -12,6 +12,11 @@
 	*
 	*************************************************************************************/
 
+
+
+
+
+
 /*
 	* STRUCT Last_Value<t_dim>
 	*
@@ -31,7 +36,7 @@ struct Last_Value{
 
 
 /*
-	* STRUCT Asian_Call
+	* STRUCT Asian_Call<t_dim>
 	*
 	*/
 template<unsigned t_dim>
@@ -41,7 +46,6 @@ struct Asian_Call{
 				Asian_Call(double K): K_(K) {}
 
 				double operator()(const Process<t_dim>& proc){
-
 								for(i=0; i<t_dim; ++i)
 												s += proc.at(i).second;
 
@@ -60,7 +64,7 @@ protected:
 
 
 /*
-	* STRUCT Basket_Call
+	* STRUCT Basket_Call<t_dim>
 	*
 	*/
 template<unsigned t_dim>
@@ -70,7 +74,6 @@ struct Basket_Call{
 				Basket_Call(const Array<t_dim>& alpha, double K): alpha_(alpha), K_(K) {}
 
 				double operator()(const Process<t_dim>& proc){
-
 								prod = dot(alpha_, proc_values(proc));
 								return (prod > K_) ? (prod - K_): 0;
 				}
@@ -81,6 +84,26 @@ protected:
 
 				double prod;
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

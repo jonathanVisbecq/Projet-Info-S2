@@ -16,6 +16,7 @@ using Array = std::array<double,dim>;
 template<size_t dim1,size_t dim2>
 using Matrix = std::array<std::array<double,dim2>,dim1>;
 
+
 /*
 	* Add two Arrays element-wise
 	*

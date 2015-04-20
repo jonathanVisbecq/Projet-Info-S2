@@ -29,15 +29,13 @@ struct Monte_Carlo : public Linear_Estimator {
 								dist_(dist), func_(func) {}
 
 
-
 				template<typename Generator>
 				double operator()(Generator& gen, unsigned M){
 
-
 								reinit();
-								auto time_start = std::chrono::steady_clock::now();
-
 								double x = 0;
+
+								auto time_start = std::chrono::steady_clock::now();
 								for(unsigned m=0; m<M; ++m) {
 												x = func_(dist_(gen()));
 												sum_ += x;
@@ -55,9 +53,6 @@ protected:
 				Dist dist_;
 				Func_Type func_;
 };
-
-
-
 
 
 /*

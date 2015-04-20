@@ -10,7 +10,7 @@
 
 /*************************************************************************************
 	*
-	* STRUCT Faure
+	* STRUCT Faure<dim>
 	*
 	* Generator for Faure's sequences
 	*
@@ -26,7 +26,11 @@ struct Faure {
 					* 'x.p_' should be the smallest prime number greater than 'dimension'
 					*/
 				Faure(const P_Adic& x):
-								x_(x), result_(), comb_(make_binom_array(32)) {}
+								x_(x), result_(), comb_(make_binom_array(32))
+				{
+								operator()();
+				}
+
 				/*
 					* Use the first prime number greater than 'dimension' (the dimension should be <= than 1613)
 					* and start from the representation of 1

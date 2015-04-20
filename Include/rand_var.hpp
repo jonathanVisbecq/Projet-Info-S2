@@ -128,6 +128,74 @@ protected:
 };
 
 
+/*
+	* STRUCT Shifted_QMC<dim,n,Dist,Generator>
+	*
+	*/
+template<unsigned dim,unsigned n,typename Dist,typename Generator>
+struct Shifted_QMC{
+
+				typedef double result_type;
+				typedef typename Dist::result_type Dist_Type;
+				typedef std::function<double(const Dist_Type&)> Func_Type;
+
+				Shifted_QMC() = delete;
+				Shifted_QMC(const Dist& dist,const Func_Type& func,Generator& gen): dist_(dist),func_(func)
+				{
+								for(k=0; k<n; ++k)
+												QMCk_.at(k) = gen();
+				}
+
+				double operator()(const Array<dim>& pt){
+
+								for(k=0; k<n; ++k){
+
+												// Add both points and take the fractional part coordinate-wise
+												for(l=0; l<dim; ++l){
+																a.at(l) = pt.at(l) + QMCk_.at(k).at(l);
+																a.at(l) -= (a.at(l)>=1) ? 1 : 0;
+												}
+
+												x += func_(dist_(a));
+								}
+
+								return x/n;
+				}
+
+
+protected:
+				Dist dist_;
+				Func_Type func_;
+				std::array<Array<dim>,n> QMCk_;
+
+				int k,l;
+				double x;
+				Array<dim> a;
+};
+
+template<unsigned dim,unsigned n,typename Dist,typename Generator>
+Shifted_QMC<dim,n,Dist,Generator>
+make_shifted_qmc(const Dist& dist,const typename Shifted_QMC<dim,n,Dist,Generator>::Func_Type& func,Generator& gen){
+				return Shifted_QMC<dim,n,Dist,Generator>(dist,func, gen);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #endif // RAND_VAR_HPP

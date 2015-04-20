@@ -10,7 +10,7 @@
 
 /*************************************************************************************
 	*
-	* STRUCT Kakutani
+	* STRUCT Kakutani<dim>
 	*
 	* Generator for Kakutani's sequences
 	*
@@ -20,14 +20,19 @@ struct Kakutani{
 
 				typedef Array<dim> result_type;
 
+				Kakutani() = delete;
 				// Each coordinate of x must have same base 'p_' as the corresponding coordinate of y
-				Kakutani(const Vect_P_Adic& x, const Vect_P_Adic& y) : xk_(x), yk_(y), result_() {}
+				Kakutani(const Vect_P_Adic& x, const Vect_P_Adic& y) : xk_(x), yk_(y), result_()
+				{
+								operator()();
+				}
 
 				result_type operator()() {
 								std::transform(xk_.begin(), xk_.end(), yk_.begin(), result_.begin(), op);
 								return result_;
 				}
 
+				result_type current() { return result_; }
 
 				// Output current vector
 				template<unsigned d>
@@ -63,7 +68,7 @@ std::ostream& operator<<(std::ostream &stream, const Kakutani<d>& k){
 
 /********************************************************************************************
 	*
-	* STRUCT Halton
+	* STRUCT Halton<dim>
 	*
 	* Halton sequences are special cases of Kakutani sequences
 	*
