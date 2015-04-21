@@ -8,6 +8,7 @@
 #include <functional>
 #include <algorithm>
 #include <iostream>
+#include <type_traits>
 
 #include "my_array.hpp"
 
@@ -20,7 +21,7 @@
 	*						- typedef 'result_type'
 	*						- static constexpr 'dim_alea' : the number of quasi/pseudo
 	*						  random numbers needed to yield
-	*						- operator(Array<Dist::dim_alea>) yielding 'result_type'
+	*						- operator(const Array<Dist::dim_alea>&) yielding 'result_type'
 	*
 	* Constraint on type 'Generator':
 	*						- operator() yielding Array<dim>
@@ -139,31 +140,33 @@ protected:
 template<typename Dist,typename QMC_Generator>
 struct Shifted_QMC{
 
+				static_assert(std::is_same<double,typename Dist::result_type>::value,
+																		"Distribution's result_type typedef should be double for shifted QMC");
+
 				typedef double result_type;
-				typedef typename Dist::result_type Dist_Type;
-				typedef std::function<double(const Dist_Type&)> Func_Type;
 				static constexpr unsigned dim_alea = Dist::dim_alea;
 
 				Shifted_QMC() = delete;
-				Shifted_QMC(unsigned N,const Dist& dist,const Func_Type& func,QMC_Generator& gen):
-								N_(N), dist_(dist), func_(func), QMCk_(N)
+				Shifted_QMC(unsigned N,const Dist& dist,QMC_Generator& gen):
+								N_(N), dist_(dist), QMCk_(N)
 				{
-								for(k=0; k<N_; ++k)
+								for(int k=0; k<N_; ++k)
 												QMCk_.at(k) = gen();
 				}
 
 				double operator()(const Array<dim_alea>& pt)
 				{
-								for(k=0; k<N_; ++k)
+								double x = 0;
+								for(int k=0; k<N_; ++k)
 								{
 												// Add both points and take the fractional part coordinate-wise
-												for(l=0; l<dim_alea; ++l)
+												for(int l=0; l<dim_alea; ++l)
 												{
 																a.at(l) = pt.at(l) + QMCk_.at(k).at(l);
 																a.at(l) -= (a.at(l)>=1) ? 1 : 0;
 												}
 
-												x += func_(dist_(a));
+												x += dist_(a);
 								}
 
 								return x / N_;
@@ -173,22 +176,19 @@ struct Shifted_QMC{
 protected:
 				unsigned N_;
 				Dist dist_;
-				Func_Type func_;
 				std::vector<Array<dim_alea> > QMCk_;
 
-				int k,l;
-				double x;
 				Array<dim_alea> a;
 };
+
 
 template<typename Dist,typename Generator>
 Shifted_QMC<Dist,Generator>
 make_shifted_qmc(unsigned N,
 																	const Dist& dist,
-																	const typename Shifted_QMC<Dist,Generator>::Func_Type& func,
 																	Generator& gen)
 {
-				return Shifted_QMC<Dist,Generator>(N,dist,func,gen);
+				return Shifted_QMC<Dist,Generator>(N,dist,gen);
 }
 
 

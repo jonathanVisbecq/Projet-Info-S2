@@ -13,10 +13,52 @@
 
 #include <functional>
 
+#include "rand_var.hpp"
 #include "process.hpp"
 
+template<typename T>
+T identity(T t) { return t; }
 
-double identity(double d) { return d; }
+
+
+
+/*
+	* STRUCT Composed_Dist<Dist>
+	*
+	* Allow composition of a distribution by a real function
+	*
+	* Implement constraints on Distribution type.
+	*
+	*/
+template<typename Dist>
+struct Composed_Dist{
+
+				typedef double result_type;
+				typedef std::function<double(typename Dist::result_type)> func_type;
+				static constexpr unsigned dim_alea = Dist::dim_alea;
+
+				Composed_Dist(const Dist& dist, const func_type& func):
+								dist_(dist), func_(func) {}
+
+				double operator()(const Array<dim_alea>& pt)
+				{
+								return func_(dist_(pt));
+				}
+
+protected:
+				Dist dist_;
+				func_type func_;
+};
+
+
+template<typename Dist>
+Composed_Dist<Dist>
+compose_dist(const Dist& dist,
+													const typename Composed_Dist<Dist>::func_type& func)
+{
+				return Composed_Dist<Dist>(dist,func);
+}
+
 
 
 

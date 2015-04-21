@@ -15,7 +15,8 @@
 
 
 
-void test1(){
+void test1()
+{
 				Array<20> times = eq_spaced_times<20>(1);
 
 				auto B = make_rvar(StdBrownian<20>(times),Uniform_Gen<20>());
@@ -29,7 +30,8 @@ void test1(){
 				}
 }
 
-void test2(){
+void test2()
+{
 				Array<20> times = eq_spaced_times<20>(1);
 
 				auto B = make_rvar(StdBrownian<20>(times),SQRT<20>());
@@ -43,7 +45,8 @@ void test2(){
 				}
 }
 
-void test3(){
+void test3()
+{
 				Array<20> times = eq_spaced_times<20>(1);
 
 				auto BS = make_rvar(Black_Scholes<20>(0.4,1,1,times),Halton<20>());
@@ -57,73 +60,88 @@ void test3(){
 				}
 }
 
-void testMC1(){
-
+void testMC1()
+{
 				Array<20> times = eq_spaced_times<20>(1);
 
 				Last_Value<20> payoff;
-				Black_Scholes<20> dist(0.6,1,1,times);
 
+				auto dist = compose_dist(Black_Scholes<20>(0.6,1,1,times),
+																													Last_Value<20>());
+				auto MC = make_mc(dist);
 
-				auto MC = make_mc(dist,payoff);
+				constexpr unsigned M = 250;
+				constexpr unsigned N = 500;
 
-				int M = 50000;
-				std::cout << "Uniform generator and M=" << M << std::endl;
-
-				Uniform_Gen<20> gen;
-				MC(gen,M);
-
+				// Uniform pseudo-random numbers generator
+				std::cout << "Uniform generator and Nb=" << M*N << std::endl;
+				Uniform_Gen<20> u_gen;
+				MC(u_gen,M*N);
 				std::cout << MC << std::endl << std::endl;
 
-				std::cout << "Halton generator and M=" << M << std::endl;
+				// Halton QMC
+				std::cout << "Halton generator and M=" << M*N << std::endl;
+				Halton<20> hal_gen;
+				MC(hal_gen,M*N);
+				std::cout << MC.mean_est() << std::endl <<
+																	MC.time() << std::endl << std::endl;
 
-				Halton<20> gen2;
-				MC(gen2,M);
+				// Faure QMC
+				std::cout << "Faure generator and Nb=" << M*N << std::endl;
+				Faure<20> fau_gen;
+				MC(fau_gen,M*N);
+				std::cout << MC.mean_est() << std::endl <<
+																	MC.time() << std::endl << std::endl;
 
-				std::cout << MC.mean_est() << std::endl << std::endl;
 
-				std::cout << "Faure generator and M=" << M << std::endl;
+				// SQRT QMC
+				std::cout << "SQRT generator and M=" << M*N << std::endl;
+				SQRT<20> sqrt_gen;
+				MC(sqrt_gen,M*N);
+				std::cout << MC.mean_est() << std::endl  <<
+																	MC.time() << std::endl << std::endl;
 
-				Faure<20> gen3;
-				MC(gen3,M);
+				// Shifted SQRT QMC
+				std::cout << "Shifted SQRT generator; M=" << M << " ; N=" << N << std::endl;
+				auto sqmc = make_shifted_qmc(N,dist,sqrt_gen);
+				auto MC_shifted = make_mc(sqmc);
 
-				std::cout << MC.mean_est() << std::endl << std::endl;
+				MC_shifted(u_gen,M);
+				std::cout << MC_shifted << std::endl << std::endl;
 
-				std::cout << "SQRT generator and M=" << M << std::endl;
 
-				SQRT<20> gen4;
-				MC(gen4,M);
-
-				std::cout << MC.mean_est() << std::endl << std::endl;
-
+				// Benchmark
 				std::cout << "Real expectation is " << std::exp(0.6) << std::endl;
 
 }
 
-template<unsigned dim>
-double func(const Array<dim>& a){
-				//double x = 0;
-
-				//for(int i=0; i<dim; ++i)
-								//x += a.at(i);
-
-				return a.at(0);
-}
-
-
-double identity(double x){
-				return x;
-}
 
 int main(){
 
-				//test1();
+//				test1();
 
-				//test2();
+//				test2();
 
-				//test3();
+//				test3();
 
 				testMC1();
+
+
+//				Array<20> times = eq_spaced_times<20>(1);
+
+//				Black_Scholes<20> dist(0.6,1,1,times);
+//				SQRT<20> gen;
+//				Last_Value<20> payoff;
+
+//				auto sqmc = make_shifted_qmc(1000,dist,payoff,gen);
+//				auto mc = make_mc(sqmc,identity);
+
+//				Uniform_Gen<20> uGen;
+
+//				mc(uGen,4);
+
+//				std::cout << mc.mean_est() << std::endl;
+
 
     return 0;
 }

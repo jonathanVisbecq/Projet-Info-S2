@@ -94,8 +94,8 @@ struct StdBrownian{
 								G_(makeFill<t_dim>(0.),make_stds_from_times(times)),
 								times_(times) {}
 
-				result_type operator()(const Array<dim_alea>& pt){
-
+				result_type operator()(const Array<dim_alea>& pt)
+				{
 								G_val = G_(pt);
 
 								val_tp.at(0) = State(times_.at(0), G_val.at(0));

@@ -4,6 +4,7 @@
 #include <chrono>
 #include <functional>
 #include <iostream>
+#include <type_traits>
 
 #include "linear_estimator.hpp"
 
@@ -23,11 +24,10 @@
 template <typename Dist>
 struct Monte_Carlo : public Linear_Estimator {
 
-				typedef typename Dist::result_type result_type;
-				typedef std::function<double(const result_type&)> Func_Type;
+				static_assert(std::is_same<double,typename Dist::result_type>::value,
+																		"Distribution's result_type typedef should be double for Monte Carlo estimation");
 
-				Monte_Carlo(const Dist& dist, const Func_Type& func):
-								dist_(dist), func_(func) {}
+				Monte_Carlo(const Dist& dist): dist_(dist) {}
 
 
 				template<typename Generator>
@@ -38,7 +38,8 @@ struct Monte_Carlo : public Linear_Estimator {
 
 								auto time_start = std::chrono::steady_clock::now();
 								for(unsigned m=0; m<M; ++m) {
-												x = func_(dist_(gen()));
+												auto a = gen();
+												x = dist_(a);
 												sum_ += x;
 												sum_of_squares_ += x*x;
 								}
@@ -52,7 +53,6 @@ struct Monte_Carlo : public Linear_Estimator {
 
 protected:
 				Dist dist_;
-				Func_Type func_;
 };
 
 
@@ -64,9 +64,9 @@ protected:
 	*/
 template<typename Dist>
 Monte_Carlo<Dist>
-make_mc(const Dist& dist, const typename Monte_Carlo<Dist>::Func_Type& func)
+make_mc(const Dist& dist)
 {
-				return Monte_Carlo<Dist>(dist,func);
+				return Monte_Carlo<Dist>(dist);
 }
 
 

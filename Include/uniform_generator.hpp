@@ -24,6 +24,8 @@ inline std::mt19937_64& generator(){
 template<unsigned dim>
 struct Uniform_Gen{
 
+				typedef Array<dim> result_type;
+
 				Uniform_Gen(): U_(0,1), pt_(){}
 
 				Array<dim> operator()()
