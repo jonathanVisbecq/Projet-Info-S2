@@ -24,9 +24,9 @@ struct Tore{
 								operator()();
 				}
 
-				result_type operator()(){
+				result_type operator()()
+				{
 								n_++;
-
 								for(i=0; i<dim; ++i)
 												result_.at(i) = std::modf(n_*alphak_.at(i),&intpart);
 
@@ -86,9 +86,9 @@ protected:
 	*------------------------------------------------------------------------------------*/
 template<unsigned dim>
 Array<dim>
-SQRT<dim>::init_alphaks(){
+SQRT<dim>::init_alphaks()
+{
 				Array<dim> a;
-
 				for(int i=0; i<dim; ++i)
 								a.at(i) = std::sqrt(primes[i]);
 

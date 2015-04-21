@@ -22,12 +22,14 @@ struct Kakutani{
 
 				Kakutani() = delete;
 				// Each coordinate of x must have same base 'p_' as the corresponding coordinate of y
-				Kakutani(const Vect_P_Adic& x, const Vect_P_Adic& y) : xk_(x), yk_(y), result_()
+				Kakutani(const Vect_P_Adic& x, const Vect_P_Adic& y) :
+								xk_(x), yk_(y), result_()
 				{
 								operator()();
 				}
 
-				result_type operator()() {
+				result_type operator()()
+				{
 								std::transform(xk_.begin(), xk_.end(), yk_.begin(), result_.begin(), op);
 								return result_;
 				}
@@ -43,7 +45,8 @@ protected:
 				Vect_P_Adic yk_;
 				result_type result_;
 
-				static double op(P_Adic& x, const P_Adic& y){
+				static double op(P_Adic& x, const P_Adic& y)
+				{
 												x = x + y;
 												return (double) x;
 				}
@@ -80,7 +83,8 @@ struct Halton: public Kakutani<dim>{
 				// Use the first 'dim' prime numbers
 				Halton(): Kakutani<dim>(make_init_vect(),make_init_vect()) {}
 
-				Halton(const std::array<unsigned,dim>& primes): Kakutani<dim>(make_init_vect(primes), make_init_vect(primes)) {}
+				Halton(const std::array<unsigned,dim>& primes):
+								Kakutani<dim>(make_init_vect(primes), make_init_vect(primes)) {}
 
 
 protected:
@@ -96,9 +100,9 @@ protected:
 	*------------------------------------------------------------------------------------*/
 template<unsigned dim>
 Vect_P_Adic
-Halton<dim>::make_init_vect(){
+Halton<dim>::make_init_vect()
+{
 				Vect_P_Adic v;
-
 				for(int i=0; i<dim; ++i)
 								v.push_back(P_Adic(1,primes[i]));
 
@@ -107,12 +111,11 @@ Halton<dim>::make_init_vect(){
 
 template<unsigned dim>
 Vect_P_Adic
-Halton<dim>::make_init_vect(const std::array<unsigned,dim>& primes){
+Halton<dim>::make_init_vect(const std::array<unsigned,dim>& primes)
+{
 				Vect_P_Adic v;
-
-				for(auto it=primes.begin(); it!=primes.end(); ++it){
+				for(auto it=primes.begin(); it!=primes.end(); ++it)
 								v.push_back(P_Adic(1,*it));
-				}
 
 				return v;
 }

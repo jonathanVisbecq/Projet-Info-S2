@@ -1,3 +1,13 @@
+/*************************************************************************************
+	*
+	* Collection of payoffs (functionals) to be used in MC simulations
+	*
+	* Constraints on payoffs:
+	*		- template 't_dim' for the number of discrete times in the process
+	*  - operator
+	*
+	*
+	*************************************************************************************/
 #ifndef PAYOFF_HPP
 #define PAYOFF_HPP
 
@@ -5,14 +15,8 @@
 
 #include "process.hpp"
 
-/*************************************************************************************
-	*
-	* Collection of payoffs (functionals) to be used in MC simulations
-	*
-	*
-	*************************************************************************************/
 
-
+double identity(double d) { return d; }
 
 
 
@@ -28,7 +32,8 @@ struct Last_Value{
 
 				Last_Value() {}
 
-				double operator()(const Process<t_dim>& proc){
+				double operator()(const Process<t_dim>& proc)
+				{
 								return proc.back().second;
 				}
 };
@@ -38,6 +43,8 @@ struct Last_Value{
 /*
 	* STRUCT Asian_Call<t_dim>
 	*
+	* Return asian call payoff on a given process
+	*
 	*/
 template<unsigned t_dim>
 struct Asian_Call{
@@ -45,7 +52,8 @@ struct Asian_Call{
 				Asian_Call() = delete;
 				Asian_Call(double K): K_(K) {}
 
-				double operator()(const Process<t_dim>& proc){
+				double operator()(const Process<t_dim>& proc)
+				{
 								for(i=0; i<t_dim; ++i)
 												s += proc.at(i).second;
 
@@ -53,6 +61,7 @@ struct Asian_Call{
 
 								return (s > K_) ? (s-K_): 0;
 				}
+
 
 protected:
 				const double K_;
@@ -66,7 +75,15 @@ protected:
 /*
 	* STRUCT Basket_Call<t_dim>
 	*
+	* Return basket call payoff on a given process
+	*
+	* ------------------------------------------------
+	* TODO: implement multidimensional processes
+	* ------------------------------------------------
+	*
 	*/
+
+/*
 template<unsigned t_dim>
 struct Basket_Call{
 
@@ -84,7 +101,7 @@ protected:
 
 				double prod;
 };
-
+*/
 
 
 

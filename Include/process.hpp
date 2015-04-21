@@ -18,13 +18,12 @@
 	* FUNC eq_spaced_times<n>
 	*
 	* Return a list of equally spaced times between 0 and T.
-	*
 	* /!\ (n-1 intervals and n timestamps)
 	*
 	*/
 template<unsigned n>
-inline Array<n> eq_spaced_times(double T){
-
+inline Array<n> eq_spaced_times(double T)
+{
 				double h = T / (n-1);
 
 				Array<n> times;
@@ -49,14 +48,15 @@ using Process = std::array<State,t_dim>;
 	*
 	*/
 template<size_t t_dim>
-Array<t_dim> proc_values(const Process<t_dim>& proc){
-
+Array<t_dim> proc_values(const Process<t_dim>& proc)
+{
 				Array<t_dim> a;
 				for(int i=0; i<t_dim; ++i)
 								a.at(i) = proc.at(i).second;
 
 				return a;
 }
+
 
 /*
 	* FUNC proc_times<t_dim>
@@ -66,8 +66,8 @@ Array<t_dim> proc_values(const Process<t_dim>& proc){
 	*
 	*/
 template<size_t t_dim>
-Array<t_dim> proc_times(const Process<t_dim>& proc){
-
+Array<t_dim> proc_times(const Process<t_dim>& proc)
+{
 				Array<t_dim> a;
 				for(int i=0; i<t_dim; ++i)
 								a.at(i) = proc.at(i).first;
@@ -87,13 +87,14 @@ template<unsigned t_dim>
 struct StdBrownian{
 
 				typedef Process<t_dim> result_type;
-				static constexpr unsigned dim_pt(){ return ((t_dim % 2)==0) ? t_dim: t_dim+1; }
+				static constexpr unsigned dim_alea =  ((t_dim % 2)==0) ? t_dim: t_dim+1;
 
 				StdBrownian() = delete;
 				StdBrownian(const Array<t_dim>& times):
-								G_(makeFill<t_dim>(0.),make_stds_from_times(times)),times_(times) {}
+								G_(makeFill<t_dim>(0.),make_stds_from_times(times)),
+								times_(times) {}
 
-				result_type operator()(const Array<dim_pt()>& pt){
+				result_type operator()(const Array<dim_alea>& pt){
 
 								G_val = G_(pt);
 
@@ -116,10 +117,9 @@ protected:
 				/*
 					* Compute square roots of the time increment, to use as standard deviations for
 					* Gaussian variables
-					*
 					*/
-				static Array<t_dim> make_stds_from_times(const Array<t_dim>& times){
-
+				static Array<t_dim> make_stds_from_times(const Array<t_dim>& times)
+				{
 								Array<t_dim> a;
 
 								a.at(0) = times.at(0);
@@ -142,20 +142,20 @@ template<unsigned t_dim>
 struct Black_Scholes{
 
 				typedef Process<t_dim> result_type;
-				static constexpr unsigned dim_pt(){ return ((t_dim % 2)==0) ? t_dim: t_dim+1; }
+				static constexpr unsigned dim_alea = ((t_dim % 2)==0) ? t_dim: t_dim+1;
 
 				Black_Scholes() = delete;
 				Black_Scholes(double r,double sigma,double x0,const Array<t_dim>& times):
 								B_(times),
-								r_(r),sigma_(sigma),x0_(x0)
+								r_(r), sigma_(sigma), x0_(x0)
 				{
 								bs_func = [x0,r,sigma] (State s){
 												return State(s.first, x0 * std::exp( (r - 0.5*std::pow(sigma,2))*s.first + sigma*s.second ));
 								};
 				}
 
-
-				result_type operator()(const Array<dim_pt()>& pt){
+				result_type operator()(const Array<dim_alea>& pt)
+				{
 								val_tp = B_(pt);
 								std::transform(val_tp.begin(),val_tp.end(),val_tp.begin(),bs_func);
 								return val_tp;

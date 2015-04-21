@@ -9,6 +9,7 @@
 
 
 
+
 /*
 	* STRUCT Monte_Carlo<Generator>
 	*
@@ -30,8 +31,8 @@ struct Monte_Carlo : public Linear_Estimator {
 
 
 				template<typename Generator>
-				double operator()(Generator& gen, unsigned M){
-
+				double operator()(Generator& gen, unsigned M)
+				{
 								reinit();
 								double x = 0;
 
@@ -63,7 +64,8 @@ protected:
 	*/
 template<typename Dist>
 Monte_Carlo<Dist>
-make_mc(const Dist& dist, const typename Monte_Carlo<Dist>::Func_Type& func){
+make_mc(const Dist& dist, const typename Monte_Carlo<Dist>::Func_Type& func)
+{
 				return Monte_Carlo<Dist>(dist,func);
 }
 

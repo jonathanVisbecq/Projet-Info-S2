@@ -1,8 +1,6 @@
 #include "p_adic.hpp"
 
 
-
-
 /*************************************************************************************
 	*
 	* CLASS P_Adic
@@ -20,7 +18,8 @@ P_Adic::P_Adic(double x, int p):
 				int puiss = 1;
 				double integral = 0;
 
-				while(x>0){
+				while(x>0)
+				{
 								x = std::modf(x*p_,&integral);
 								ak_.push_back((int)integral);
 								pk_.push_back(puiss);
@@ -38,7 +37,8 @@ P_Adic::P_Adic(int n, int p):
 {
 
 				int puiss = 1;
-				while(n > 0){
+				while(n > 0)
+				{
 								ak_.push_back(n % p_);
 								pk_.push_back(puiss);
 								puiss *= p_;
@@ -54,13 +54,15 @@ P_Adic::P_Adic(int n, int p):
 	* Methods
 	*------------------------------------------------------------------------------------*/
 
-P_Adic P_Adic::operator++(int) {
+P_Adic P_Adic::operator++(int)
+{
 				P_Adic copie = * this;
 				increment();
 				return copie;
 }
 
-P_Adic& P_Adic::operator++() {
+P_Adic& P_Adic::operator++()
+{
 				increment();
 				return (* this);
 }
@@ -69,20 +71,22 @@ P_Adic& P_Adic::operator++() {
 
 // Moves to the p-adic representation of n to the representation
 // of n+1
-void P_Adic::increment() {
-
+void P_Adic::increment()
+{
 				Coeff::iterator it = ak_.begin();
-
-				while((it != ak_.end()) && ((*it)+1 == p_)){
+				while((it != ak_.end()) && ((*it)+1 == p_))
+				{
 								(*it) = 0;
 								it++;
 				}
 
-				if (it == ak_.end()) {
+				if (it == ak_.end())
+				{
 								ak_.push_back(1);
 								pk_.push_back(pk_.back()*p_);
 				}
-				else (*it) += 1;
+				else
+								(*it) += 1;
 }
 
 
@@ -103,7 +107,8 @@ P_Adic operator+(const P_Adic& m1, const P_Adic& m2){
 
 				int r = 0, s = 0;
 				int puiss = 1;
-				while(it1!=m1.ak_.end() && it2!=m2.ak_.end()){
+				while(it1!=m1.ak_.end() && it2!=m2.ak_.end())
+				{
 								s = *it1 + *it2 + r;
 								ak.push_back(s % p);
 								pk.push_back(puiss);
@@ -114,7 +119,8 @@ P_Adic operator+(const P_Adic& m1, const P_Adic& m2){
 				}
 
 				// Only one of the following two loops is executed
-				while(it1!=m1.ak_.end()){
+				while(it1!=m1.ak_.end())
+				{
 								s = *it1 + r;
 								ak.push_back(s % p);
 								pk.push_back(puiss);
@@ -122,7 +128,8 @@ P_Adic operator+(const P_Adic& m1, const P_Adic& m2){
 								puiss *= p;
 								++it1;
 				}
-				while(it2!=m2.ak_.end()){
+				while(it2!=m2.ak_.end())
+				{
 								s = *it2 + r;
 								ak.push_back(s % p);
 								pk.push_back(puiss);
@@ -131,7 +138,8 @@ P_Adic operator+(const P_Adic& m1, const P_Adic& m2){
 								++it2;
 				}
 
-				if(r == 1){
+				if(r == 1)
+				{
 								ak.push_back(1);
 								pk.push_back(puiss);
 								puiss *= p;
@@ -144,8 +152,8 @@ P_Adic operator+(const P_Adic& m1, const P_Adic& m2){
 
 
 
-std::ostream& operator<<(std::ostream &stream, const P_Adic& padic){
-
+std::ostream& operator<<(std::ostream &stream, const P_Adic& padic)
+{
 				stream << padic.p_ << "|.";
 				for(auto it=padic.ak_.begin(); it!= padic.ak_.end(); ++it)
 								stream << *it << " ";

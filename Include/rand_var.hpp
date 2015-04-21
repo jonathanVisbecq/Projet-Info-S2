@@ -16,12 +16,13 @@
 /*
 	* STRUCT Rand_Var
 	*
-	*
 	* Constraints on type 'Dist':
 	*						- typedef 'result_type'
-	*						- operator(Array<dim>) yielding 'Result_Type'
+	*						- static constexpr 'dim_alea' : the number of quasi/pseudo
+	*						  random numbers needed to yield
+	*						- operator(Array<Dist::dim_alea>) yielding 'result_type'
 	*
-	* Constraint on type 'Equi_Gen':
+	* Constraint on type 'Generator':
 	*						- operator() yielding Array<dim>
 	*
 	*/
@@ -47,13 +48,13 @@ protected:
 /*
 	* FUNC make_rvar<Dist,Generator>
 	*
-	* Bind a generator (of real in a unit hypercube> to a distribution.
+	* Bind a generator (of real in a unit hypercube) to a distribution.
 	*
 	*/
 template<typename Dist, typename Generator>
 Rand_Var<Dist,Generator>
-make_rvar(const Dist& dist, const Generator& gen){
-
+make_rvar(const Dist& dist, const Generator& gen)
+{
 				return Rand_Var<Dist,Generator>(dist,gen);
 }
 
@@ -69,12 +70,13 @@ make_rvar(const Dist& dist, const Generator& gen){
 struct Uniform{
 
 				typedef double result_type;
+				static constexpr unsigned dim_alea = 1;
 
 				Uniform(double min, double max):
 								min_(min), max_(max) {}
 
-				result_type operator()(const Array<1>& pt) const{
-
+				result_type operator()(const Array<dim_alea>& pt) const
+				{
 								return min_ + (max_ - min_)*pt.at(0);
 				}
 
@@ -97,13 +99,13 @@ template<unsigned dim>
 struct Gaussian_Ind{
 
 				typedef Array<dim> result_type;
-				static constexpr unsigned dim_pt(){ return ((dim % 2)==0) ? dim: dim+1; }
+				static constexpr unsigned dim_alea = ((dim % 2)==0) ? dim: dim+1;
 
 				Gaussian_Ind(Array<dim> mean, Array<dim> std):
 								mean_(mean), std_(std) {}
 
 
-				result_type operator()(const Array<dim_pt()>& pt){
+				result_type operator()(const Array<dim_alea>& pt){
 
 								for(i = 0; i<dim; ++i){
 												if(i%2 == 0){
@@ -129,29 +131,34 @@ protected:
 
 
 /*
-	* STRUCT Shifted_QMC<dim,n,Dist,Generator>
+	* STRUCT Shifted_QMC<Dist,QMC_Generator>
+	*
+	* Shifted quasi-monte carlo
 	*
 	*/
-template<unsigned dim,unsigned n,typename Dist,typename Generator>
+template<typename Dist,typename QMC_Generator>
 struct Shifted_QMC{
 
 				typedef double result_type;
 				typedef typename Dist::result_type Dist_Type;
 				typedef std::function<double(const Dist_Type&)> Func_Type;
+				static constexpr unsigned dim_alea = Dist::dim_alea;
 
 				Shifted_QMC() = delete;
-				Shifted_QMC(const Dist& dist,const Func_Type& func,Generator& gen): dist_(dist),func_(func)
+				Shifted_QMC(unsigned N,const Dist& dist,const Func_Type& func,QMC_Generator& gen):
+								N_(N), dist_(dist), func_(func), QMCk_(N)
 				{
-								for(k=0; k<n; ++k)
+								for(k=0; k<N_; ++k)
 												QMCk_.at(k) = gen();
 				}
 
-				double operator()(const Array<dim>& pt){
-
-								for(k=0; k<n; ++k){
-
+				double operator()(const Array<dim_alea>& pt)
+				{
+								for(k=0; k<N_; ++k)
+								{
 												// Add both points and take the fractional part coordinate-wise
-												for(l=0; l<dim; ++l){
+												for(l=0; l<dim_alea; ++l)
+												{
 																a.at(l) = pt.at(l) + QMCk_.at(k).at(l);
 																a.at(l) -= (a.at(l)>=1) ? 1 : 0;
 												}
@@ -159,24 +166,29 @@ struct Shifted_QMC{
 												x += func_(dist_(a));
 								}
 
-								return x/n;
+								return x / N_;
 				}
 
 
 protected:
+				unsigned N_;
 				Dist dist_;
 				Func_Type func_;
-				std::array<Array<dim>,n> QMCk_;
+				std::vector<Array<dim_alea> > QMCk_;
 
 				int k,l;
 				double x;
-				Array<dim> a;
+				Array<dim_alea> a;
 };
 
-template<unsigned dim,unsigned n,typename Dist,typename Generator>
-Shifted_QMC<dim,n,Dist,Generator>
-make_shifted_qmc(const Dist& dist,const typename Shifted_QMC<dim,n,Dist,Generator>::Func_Type& func,Generator& gen){
-				return Shifted_QMC<dim,n,Dist,Generator>(dist,func, gen);
+template<typename Dist,typename Generator>
+Shifted_QMC<Dist,Generator>
+make_shifted_qmc(unsigned N,
+																	const Dist& dist,
+																	const typename Shifted_QMC<Dist,Generator>::Func_Type& func,
+																	Generator& gen)
+{
+				return Shifted_QMC<Dist,Generator>(N,dist,func,gen);
 }
 
 

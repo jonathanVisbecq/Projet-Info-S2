@@ -35,7 +35,8 @@ struct Faure {
 					* Use the first prime number greater than 'dimension' (the dimension should be <= than 1613)
 					* and start from the representation of 1
 					*/
-				Faure(): Faure(P_Adic(1,smallest_greater_prime(dim))) {}
+				Faure():
+								Faure(P_Adic(1,smallest_greater_prime(dim))) {}
 
 
 				result_type current() { return result_; }
@@ -61,12 +62,13 @@ public:
 	*------------------------------------------------------------------------------------*/
 template<unsigned dim>
 auto
-Faure<dim>::operator()() -> result_type{
-
+Faure<dim>::operator()() -> result_type
+{
 				P_Adic xi = x_++;
 				auto it = result_.begin();
 
-				while(it != result_.end()){
+				while(it != result_.end())
+				{
 								*it++ = (double) xi;
 								xi = transform(xi);
 				}
@@ -77,13 +79,14 @@ Faure<dim>::operator()() -> result_type{
 
 template<unsigned dim>
 P_Adic
-Faure<dim>::transform(const P_Adic& y){
-
+Faure<dim>::transform(const P_Adic& y)
+{
 				P_Adic::Coeff bk;
 				auto it_Comb = comb_.begin();
 				auto it = y.ak_.begin();
 
-				while(it != y.ak_.end()){
+				while(it != y.ak_.end())
+				{
 								bk.push_back(std::inner_product(it, y.ak_.end(), (*it_Comb).begin(), 0) % y.base());
 								it++;
 								it_Comb++;
@@ -95,8 +98,8 @@ Faure<dim>::transform(const P_Adic& y){
 
 template<unsigned dim>
 int
-Faure<dim>::smallest_greater_prime(int d){
-
+Faure<dim>::smallest_greater_prime(int d)
+{
 				int idx = 0;
 				while(primes[idx]<d && idx<255)
 								++idx;
@@ -106,8 +109,8 @@ Faure<dim>::smallest_greater_prime(int d){
 
 template<unsigned dim>
 auto
-Faure<dim>::make_binom_array(int p) -> Coeff_Binom{
-
+Faure<dim>::make_binom_array(int p) -> Coeff_Binom
+{
 				Coeff_Binom comb(p,std::vector<int>(p,0));
 
 				for(int n = 0; n < p; n++)
@@ -129,8 +132,8 @@ Faure<dim>::make_binom_array(int p) -> Coeff_Binom{
 	* Related non-member functions
 	*------------------------------------------------------------------------------------*/
 template<unsigned d>
-std::ostream& operator<<(std::ostream &stream, const Faure<d>& f){
-
+std::ostream& operator<<(std::ostream &stream, const Faure<d>& f)
+{
 				for(auto it=f.result_.begin(); it!=f.result_.end(); ++it)
 								stream << *it << "    ";
 

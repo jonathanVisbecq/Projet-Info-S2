@@ -19,37 +19,46 @@ struct Linear_Estimator{
 
 				Linear_Estimator() { reinit(); }
 
-				double mean_est() const {
+				double mean_est() const
+				{
 								return this->sum_ / this->sample_size_;
 				}
-				double mean_of_squares_est() const {
+
+				double mean_of_squares_est() const
+				{
 								return this->sum_of_squares_ / this->sample_size_;
 				}
-				double var_est() const {
+
+				double var_est() const
+				{
 								return mean_of_squares_est() - std::pow(mean_est(),2);
 				}
-				double st_dev_est() const {
+
+				double st_dev_est() const
+				{
 								return std::sqrt(var_est());
 				}
-				double ci() const {
+
+				double ci() const
+				{
 								return 1.96*st_dev_est()/std::sqrt(sample_size_);
 				}
 
-				void reinit() {
-
+				void reinit()
+				{
 								sum_ = 0;
 								sum_of_squares_ = 0;
 								sample_size_ = 0;
 								time_span_ = std::chrono::duration<double>(0);
 				}
 
-				double time() const{
-
+				double time() const
+				{
 								return time_span_.count();
 				}
 
-				Linear_Estimator& operator+=(const Linear_Estimator& other){
-
+				Linear_Estimator& operator+=(const Linear_Estimator& other)
+				{
 								sum_ += other.sum_;
 								sum_of_squares_ += other.sum_of_squares_;
 								sample_size_ += other.sample_size_;
@@ -69,8 +78,8 @@ protected:
 };
 
 
-std::ostream& operator<<(std::ostream& stream, const Linear_Estimator& MC){
-
+std::ostream& operator<<(std::ostream& stream, const Linear_Estimator& MC)
+{
 				stream << "MC mean: " << MC.mean_est() << std::endl;
 				stream << "MC var: " << MC.var_est() << std::endl;
 				stream << "MC std: " << MC.st_dev_est() << std::endl;
