@@ -1,0 +1,73 @@
+#ifndef PROCESSUS_HPP
+#define PROCESSUS_HPP
+
+#include <iostream>
+#include <utility>
+#include <list>
+
+#include "rand_var.hpp"
+
+namespace proc{
+
+
+template <typename Realization>
+class Process{
+
+public:
+				typedef Realization Realization_Type;
+
+				virtual Realization_Type operator()(const std::list<double>& times) = 0;
+				virtual Realization_Type operator()(double T, int n = 0) = 0;
+};
+
+
+/**
+	* @brief Base class for processes
+	*/
+template <typename T>
+class Process_Realization: public std::list<std::pair<double,T>>{
+
+public:
+				typedef std::pair<double,T> State;
+				typedef std::list<State> Result_Type;
+				typedef typename Result_Type::iterator Iterator;
+				typedef typename Result_Type::const_iterator Const_Iterator;
+
+				Process_Realization(const std::list<double>& times);
+				Process_Realization(double T, int n = 1);
+				
+				void refine(const std::list<double>& times);
+
+				template <typename S>
+				friend std::ostream& operator<<(std::ostream& stream, const Process_Realization<S>& proc);
+};
+
+
+
+class StdBrownian_Realization: public Process_Realization<double>{};
+
+
+typedef Process<StdBrownian
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+#endif // PROCESSUS_HPP
