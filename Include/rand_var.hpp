@@ -11,6 +11,7 @@
 #include <type_traits>
 
 #include "my_array.hpp"
+#include "kakutani.hpp"
 
 
 
@@ -102,7 +103,8 @@ struct Gaussian_Ind{
 				typedef Array<dim> result_type;
 				static constexpr unsigned dim_alea = ((dim % 2)==0) ? dim: dim+1;
 
-				Gaussian_Ind(Array<dim> mean, Array<dim> std):
+				Gaussian_Ind(const Array<dim>& mean = makeFill<dim>(0.),
+																	const Array<dim>& std = makeFill<dim>(1.)):
 								mean_(mean), std_(std) {}
 
 
@@ -156,11 +158,11 @@ struct Shifted_QMC{
 
 				double operator()(const Array<dim_alea>& pt)
 				{
-								double x = 0;
-								for(int k=0; k<N_; ++k)
+								x = 0;
+								for(k=0; k<N_; ++k)
 								{
 												// Add both points and take the fractional part coordinate-wise
-												for(int l=0; l<dim_alea; ++l)
+												for(l=0; l<dim_alea; ++l)
 												{
 																a.at(l) = pt.at(l) + QMCk_.at(k).at(l);
 																a.at(l) -= (a.at(l)>=1) ? 1 : 0;
@@ -179,6 +181,8 @@ protected:
 				std::vector<Array<dim_alea> > QMCk_;
 
 				Array<dim_alea> a;
+				double x;
+				int k,l;
 };
 
 
@@ -193,8 +197,49 @@ make_shifted_qmc(unsigned N,
 
 
 
+template<typename Dist>
+struct RandStart_Halton{
+
+				static_assert(std::is_same<double,typename Dist::result_type>::value,
+																		"Distribution's result_type typedef should be double for random-start Halton");
+
+				typedef double result_type;
+				static constexpr unsigned dim_alea = Dist::dim_alea;
+
+				RandStart_Halton() = delete;
+				RandStart_Halton(unsigned N,const Dist& dist):
+								N_(N),dist_(dist),haltF_() {}
+
+				result_type operator()(const Array<dim_alea>& pt)
+				{
+								haltF_ = Halton_Fast<dim_alea>(pt);
+
+								x = 0;
+								for(i=0; i<N_; ++i)
+												x += dist_(haltF_());
+
+								return x / N_;
+				}
 
 
+
+protected:
+				unsigned N_;
+				Dist dist_;
+				Halton_Fast<dim_alea> haltF_;
+
+				double x;
+				int i;
+};
+
+
+template<typename Dist>
+RandStart_Halton<Dist>
+make_randStart_halton(unsigned N,
+																						const Dist& dist)
+{
+				return RandStart_Halton<Dist>(N,dist);
+}
 
 
 

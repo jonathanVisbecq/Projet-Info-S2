@@ -51,7 +51,7 @@ static const int primes[255] = {
 	*************************************************************************************/
 struct P_Adic {
 
-				typedef std::list<int> Coeff;
+				typedef std::vector<int> Coeff;
 
 				P_Adic(Coeff ak, Coeff pk) : ak_(ak), pk_(pk), p_(*(++pk.begin())) {}
 				P_Adic(int n, int p);
@@ -91,5 +91,6 @@ std::ostream& operator<<(std::ostream &stream, const P_Adic& padic);
 
 
 typedef std::vector<P_Adic> Vect_P_Adic;
+std::ostream& operator<<(std::ostream &stream, const Vect_P_Adic& v);
 
 #endif // P_ADIC_HPP

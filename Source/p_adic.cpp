@@ -14,12 +14,12 @@
 P_Adic::P_Adic(double x, int p):
 				p_(p)
 {
-
 				int puiss = 1;
 				double integral = 0;
 
 				while(x>0)
 				{
+								std::cout << x << std::endl << std::endl;
 								x = std::modf(x*p_,&integral);
 								ak_.push_back((int)integral);
 								pk_.push_back(puiss);
@@ -35,7 +35,6 @@ P_Adic::P_Adic(double x, int p):
 P_Adic::P_Adic(int n, int p):
 				p_(p)
 {
-
 				int puiss = 1;
 				while(n > 0)
 				{
@@ -80,7 +79,7 @@ void P_Adic::increment()
 								it++;
 				}
 
-				if (it == ak_.end())
+				if(it == ak_.end())
 				{
 								ak_.push_back(1);
 								pk_.push_back(pk_.back()*p_);
@@ -95,9 +94,11 @@ void P_Adic::increment()
 	* Related non-member functions
 	*------------------------------------------------------------------------------------*/
 
-
-P_Adic operator+(const P_Adic& m1, const P_Adic& m2){
-
+/*
+	* Slow.
+	*/
+P_Adic operator+(const P_Adic& m1, const P_Adic& m2)
+{
 				// 'm1' and 'm2' must be decompositions with respect to the same base 'p_'
 				int p = m1.p_;
 				P_Adic::Coeff ak, pk;
@@ -152,11 +153,22 @@ P_Adic operator+(const P_Adic& m1, const P_Adic& m2){
 
 
 
+
 std::ostream& operator<<(std::ostream &stream, const P_Adic& padic)
 {
 				stream << padic.p_ << "|.";
 				for(auto it=padic.ak_.begin(); it!= padic.ak_.end(); ++it)
 								stream << *it << " ";
+
+				return stream;
+}
+
+
+
+std::ostream& operator<<(std::ostream &stream, const Vect_P_Adic& v)
+{
+				for(auto it=v.begin(); it!=v.end(); ++it)
+								stream << *it << std::endl;
 
 				return stream;
 }

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <chrono>
 #include <functional>
 #include <random>
@@ -12,8 +13,21 @@
 #include "tore.hpp"
 #include "uniform_generator.hpp"
 #include "payoff.hpp"
+#include "scripts.hpp"
 
+void test0()
+{
+				Uniform_Gen<2> u_gen;
+				Array<2> a = u_gen();
 
+				auto G = make_rvar(Gaussian_Ind<2>(),Halton_Fast<2>(a));
+
+				for(int i=0; i<1000; ++i)
+				{
+								G();
+								std::cout << G.current().at(0) << " " << G.current().at(1) << std::endl;
+				}
+}
 
 void test1()
 {
@@ -64,8 +78,6 @@ void testMC1()
 {
 				Array<20> times = eq_spaced_times<20>(1);
 
-				Last_Value<20> payoff;
-
 				auto dist = compose_dist(Black_Scholes<20>(0.6,1,1,times),
 																													Last_Value<20>());
 				auto MC = make_mc(dist);
@@ -81,7 +93,7 @@ void testMC1()
 
 				// Halton QMC
 				std::cout << "Halton generator and M=" << M*N << std::endl;
-				Halton<20> hal_gen;
+				Halton_Fast<20> hal_gen(u_gen());
 				MC(hal_gen,M*N);
 				std::cout << MC.mean_est() << std::endl <<
 																	MC.time() << std::endl << std::endl;
@@ -109,6 +121,13 @@ void testMC1()
 				MC_shifted(u_gen,M);
 				std::cout << MC_shifted << std::endl << std::endl;
 
+				// Random start Halton
+				std::cout << "Random start Halton generator; M=" << M << " ; N=" << N << std::endl;
+				auto rdHalt = make_randStart_halton(N,dist);
+				auto MC_rdStartHalt = make_mc(rdHalt);
+
+				MC_rdStartHalt(u_gen,M);
+				std::cout << MC_rdStartHalt << std::endl << std::endl;
 
 				// Benchmark
 				std::cout << "Real expectation is " << std::exp(0.6) << std::endl;
@@ -116,7 +135,10 @@ void testMC1()
 }
 
 
+
 int main(){
+
+//				test0();
 
 //				test1();
 
@@ -126,21 +148,11 @@ int main(){
 
 				testMC1();
 
+//				std::ofstream os("compare_ciAndTime_MCvsRQMC.dat");
+//				compare_ciAndTime_MCvsRQMC(os);
+//				os.close();
 
-//				Array<20> times = eq_spaced_times<20>(1);
 
-//				Black_Scholes<20> dist(0.6,1,1,times);
-//				SQRT<20> gen;
-//				Last_Value<20> payoff;
-
-//				auto sqmc = make_shifted_qmc(1000,dist,payoff,gen);
-//				auto mc = make_mc(sqmc,identity);
-
-//				Uniform_Gen<20> uGen;
-
-//				mc(uGen,4);
-
-//				std::cout << mc.mean_est() << std::endl;
 
 
     return 0;

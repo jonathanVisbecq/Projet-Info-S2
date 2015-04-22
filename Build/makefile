@@ -1,4 +1,4 @@
-OBJS = main.o p_adic.o
+OBJS = main.o p_adic.o scripts.o
 INCLUDES = ../Include
 
 CXX = g++
@@ -17,8 +17,7 @@ projetPages.exe: $(OBJS)
 
 main.o:
 p_adic.o: p_adic.hpp
-
-
+scripts.o: scripts.hpp
 
 
 clean:

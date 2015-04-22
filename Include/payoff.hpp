@@ -16,11 +16,6 @@
 #include "rand_var.hpp"
 #include "process.hpp"
 
-template<typename T>
-T identity(T t) { return t; }
-
-
-
 
 /*
 	* STRUCT Composed_Dist<Dist>

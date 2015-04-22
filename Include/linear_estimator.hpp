@@ -1,6 +1,7 @@
 #ifndef LINEAR_ESTIMATOR_HPP
 #define LINEAR_ESTIMATOR_HPP
 
+#include <iostream>
 #include <chrono>
 #include <cmath>
 
@@ -19,30 +20,11 @@ struct Linear_Estimator{
 
 				Linear_Estimator() { reinit(); }
 
-				double mean_est() const
-				{
-								return this->sum_ / this->sample_size_;
-				}
-
-				double mean_of_squares_est() const
-				{
-								return this->sum_of_squares_ / this->sample_size_;
-				}
-
-				double var_est() const
-				{
-								return mean_of_squares_est() - std::pow(mean_est(),2);
-				}
-
-				double st_dev_est() const
-				{
-								return std::sqrt(var_est());
-				}
-
-				double ci() const
-				{
-								return 1.96*st_dev_est()/std::sqrt(sample_size_);
-				}
+				double mean_est() const { return sum_ / sample_size_; }
+				double mean_of_squares_est() const { return sum_of_squares_ / sample_size_; }
+				double var_est() const { return mean_of_squares_est() - std::pow(mean_est(),2); }
+				double st_dev_est() const { return std::sqrt(var_est()); }
+				double ci() const { return 1.96*st_dev_est()/std::sqrt(sample_size_); }
 
 				void reinit()
 				{
@@ -68,7 +50,6 @@ struct Linear_Estimator{
 				}
 
 
-				friend std::ostream& operator<<(std::ostream& stream, const Linear_Estimator& MC);
 
 protected:
 				double sum_;
@@ -78,7 +59,7 @@ protected:
 };
 
 
-std::ostream& operator<<(std::ostream& stream, const Linear_Estimator& MC)
+inline std::ostream& operator<<(std::ostream& stream, const Linear_Estimator& MC)
 {
 				stream << "MC mean: " << MC.mean_est() << std::endl;
 				stream << "MC var: " << MC.var_est() << std::endl;
