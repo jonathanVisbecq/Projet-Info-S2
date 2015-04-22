@@ -146,11 +146,9 @@ int main(){
 
 //				test3();
 
-				testMC1();
+//				testMC1();
 
-//				std::ofstream os("compare_ciAndTime_MCvsRQMC.dat");
-//				compare_ciAndTime_MCvsRQMC(os);
-//				os.close();
+				compare_ciAndTime_MCvsRQMC();
 
 
 

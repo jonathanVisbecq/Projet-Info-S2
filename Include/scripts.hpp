@@ -27,7 +27,7 @@ struct Unit_Triangle{
 };
 
 
-void compare_ciAndTime_MCvsRQMC(std::ostream& stream = std::cout);
+void compare_ciAndTime_MCvsRQMC();
 
 
 

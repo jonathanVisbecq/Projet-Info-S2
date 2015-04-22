@@ -1,6 +1,6 @@
 #include "scripts.hpp"
 
-void compare_ciAndTime_MCvsRQMC(std::ostream &stream)
+void compare_ciAndTime_MCvsRQMC()
 {
 				int M = 1000;
 				constexpr int N_max = 500;
@@ -34,10 +34,15 @@ void compare_ciAndTime_MCvsRQMC(std::ostream &stream)
 
 
 				std::cout << "Writing to stream..." << std::endl;
+
+				std::ofstream stream("../Data/compare_ciAndTime_MCvsRQMC.dat");
+
 				for(int i=1; i<N_max; ++i)
 				{
 							stream << i*M << " "       << mc_ci.at(i-1)   << " " << rqmc_ci.at(i-1)   <<
 																								" "	      << mc_time.at(i-1) << " " << rqmc_time.at(i-1) <<
 																								std::endl << std::endl;
 				}
+
+				stream.close();
 }
