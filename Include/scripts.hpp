@@ -30,5 +30,14 @@ struct Unit_Triangle{
 void compare_ciAndTime_MCvsRQMC();
 
 
+/*
+	* Second test of Tu04
+	*
+	* Analyse convergence rate of second and third normalized moments with L = M*n simulations
+	* for MC and M simulations using n quasi-random numbers each for RQMC
+	*
+	*
+	*/
+
 
 #endif // SCRIPTS_HPP
