@@ -11,7 +11,7 @@
 
 
 
-/*
+/********************************************************************************************
 	* STRUCT Monte_Carlo<Generator>
 	*
 	* Class to represent Monte Carlo estimation.
@@ -20,7 +20,7 @@
 	*						- typedef 'result_type'
 	*						- operator(Generator&) yielding 'result_type'
 	*
-	*/
+	*******************************************************************************************/
 template <typename Dist>
 struct Monte_Carlo : public Linear_Estimator {
 
@@ -42,6 +42,7 @@ struct Monte_Carlo : public Linear_Estimator {
 												x = dist_(a);
 												sum_ += x;
 												sum_of_squares_ += x*x;
+												sum_of_cubes_ += x*x*x;
 								}
 
 								sample_size_ += M;
@@ -56,12 +57,12 @@ protected:
 };
 
 
-/*
+/*-------------------------------------------------------------------------------------
 	* FUNC make_mc<Dist>
 	*
 	* Make a Monte_Carlo<Dist> object from a distribution and a function
 	*
-	*/
+	*------------------------------------------------------------------------------------*/
 template<typename Dist>
 Monte_Carlo<Dist>
 make_mc(const Dist& dist)

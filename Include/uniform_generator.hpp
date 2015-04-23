@@ -4,6 +4,8 @@
 #include <random>
 #include <chrono>
 
+#include "my_array.hpp"
+
 inline std::mt19937_64& generator(){
 
 				static double seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -15,7 +17,6 @@ inline std::mt19937_64& generator(){
 
 
 /*************************************************************************************
-	*
 	* STRUCT Uniform_Gen<dim>
 	*
 	* Multidimensional uniform random variable over [0,1]^dim
@@ -28,7 +29,7 @@ struct Uniform_Gen{
 
 				Uniform_Gen(): U_(0,1), pt_(){}
 
-				Array<dim> operator()()
+				result_type operator()()
 				{
 								for(auto it=pt_.begin(); it!=pt_.end(); ++it)
 												*it = U_(generator());
@@ -39,7 +40,7 @@ struct Uniform_Gen{
 
 protected:
 				std::uniform_real_distribution<double> U_;
-				Array<dim> pt_;
+				result_type pt_;
 };
 
 #endif // UNIFORM_HPP

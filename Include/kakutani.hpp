@@ -97,7 +97,6 @@ struct Halton: public Kakutani<dim>{
 								for(int i=0; i<dim; ++i)
 											this->result_.at(i) = (double) ++(this->xk_).at(i);
 
-								std::cout << this->result_ << std::endl << std::endl;
 								return this->result_;
 				}
 
@@ -120,10 +119,8 @@ Vect_P_Adic
 Halton<dim>::make_init_pt(const Array<dim> &starting_pt)
 {
 				Vect_P_Adic v;
-				for(int i=0; i<dim; ++i){
+				for(int i=0; i<dim; ++i)
 								v.push_back(P_Adic(starting_pt.at(i),primes[i]));
-								std::cout << v.back() << std::endl << std::endl;
-				}
 
 				return v;
 }

@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cmath>
 
-#include "rand_var.hpp"
+#include "gaussian_ind.hpp"
 
 /*************************************************************************************
 	*
@@ -14,13 +14,13 @@
 	*
 	*************************************************************************************/
 
-/*
+/*-------------------------------------------------------------------------------------
 	* FUNC eq_spaced_times<n>
 	*
 	* Return a list of equally spaced times between 0 and T.
 	* /!\ (n-1 intervals and n timestamps)
 	*
-	*/
+	*------------------------------------------------------------------------------------*/
 template<unsigned n>
 inline Array<n> eq_spaced_times(double T)
 {
@@ -40,13 +40,13 @@ template<unsigned t_dim>
 using Process = std::array<State,t_dim>;
 
 
-/*
+/*-------------------------------------------------------------------------------------
 	* FUNC proc_values<t_dim>
 	*
 	* Take a process (as a 'std::array<State,t_dim>') and return
 	* only the values (as an 'Array<t_dim>')
 	*
-	*/
+	*------------------------------------------------------------------------------------*/
 template<size_t t_dim>
 Array<t_dim> proc_values(const Process<t_dim>& proc)
 {
@@ -58,13 +58,13 @@ Array<t_dim> proc_values(const Process<t_dim>& proc)
 }
 
 
-/*
+/*-------------------------------------------------------------------------------------
 	* FUNC proc_times<t_dim>
 	*
 	* Take a process (as a 'std::array<State,t_dim>') and return
 	* only the times (as an 'Array<t_dim>')
 	*
-	*/
+	*------------------------------------------------------------------------------------*/
 template<size_t t_dim>
 Array<t_dim> proc_times(const Process<t_dim>& proc)
 {
@@ -77,8 +77,8 @@ Array<t_dim> proc_times(const Process<t_dim>& proc)
 
 
 /*************************************************************************************
-	*
 	* STRUCT StdBrownian<t_dim>
+	* Distribution
 	*
 	* Standard Brownian Motion at 't_dim' given times
 	*
@@ -132,8 +132,8 @@ protected:
 
 
 /*************************************************************************************
-	*
 	* STRUCT Black_Scholes<t_dim>
+	* Distribution
 	*
 	* Black_Scholes process at 't_dim' given times
 	*

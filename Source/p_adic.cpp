@@ -19,7 +19,6 @@ P_Adic::P_Adic(double x, int p):
 
 				while(x>0)
 				{
-								std::cout << x << std::endl << std::endl;
 								x = std::modf(x*p_,&integral);
 								ak_.push_back((int)integral);
 								pk_.push_back(puiss);

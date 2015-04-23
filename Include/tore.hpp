@@ -41,7 +41,7 @@ struct Tore{
 				friend std::ostream& operator<<(std::ostream &stream, const Tore<d>& k);
 
 protected:
-				Array<dim> alphak_;
+				result_type alphak_;
 				result_type result_;
 				unsigned n_;
 

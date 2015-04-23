@@ -2,68 +2,21 @@
 	*
 	* Collection of payoffs (functionals) to be used in MC simulations
 	*
-	* Constraints on payoffs:
-	*		- template 't_dim' for the number of discrete times in the process
-	*  - operator
-	*
-	*
 	*************************************************************************************/
 #ifndef PAYOFF_HPP
 #define PAYOFF_HPP
 
 #include <functional>
 
-#include "rand_var.hpp"
 #include "process.hpp"
 
 
-/*
-	* STRUCT Composed_Dist<Dist>
-	*
-	* Allow composition of a distribution by a real function
-	*
-	* Implement constraints on Distribution type.
-	*
-	*/
-template<typename Dist>
-struct Composed_Dist{
-
-				typedef double result_type;
-				typedef std::function<double(typename Dist::result_type)> func_type;
-				static constexpr unsigned dim_alea = Dist::dim_alea;
-
-				Composed_Dist(const Dist& dist, const func_type& func):
-								dist_(dist), func_(func) {}
-
-				double operator()(const Array<dim_alea>& pt)
-				{
-								return func_(dist_(pt));
-				}
-
-protected:
-				Dist dist_;
-				func_type func_;
-};
-
-
-template<typename Dist>
-Composed_Dist<Dist>
-compose_dist(const Dist& dist,
-													const typename Composed_Dist<Dist>::func_type& func)
-{
-				return Composed_Dist<Dist>(dist,func);
-}
-
-
-
-
-
-/*
+/*************************************************************************************
 	* STRUCT Last_Value<t_dim>
 	*
 	* Return last value of the process
 	*
-	*/
+	*************************************************************************************/
 template<unsigned t_dim>
 struct Last_Value{
 
@@ -77,12 +30,12 @@ struct Last_Value{
 
 
 
-/*
+/*************************************************************************************
 	* STRUCT Asian_Call<t_dim>
 	*
 	* Return asian call payoff on a given process
 	*
-	*/
+	*************************************************************************************/
 template<unsigned t_dim>
 struct Asian_Call{
 
