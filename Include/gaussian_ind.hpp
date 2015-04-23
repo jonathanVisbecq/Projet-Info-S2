@@ -1,0 +1,4 @@
+#ifndef GAUSSIAN_IND_HPP
+#define GAUSSIAN_IND_HPP
+
+#endif // GAUSSIAN_IND_HPP

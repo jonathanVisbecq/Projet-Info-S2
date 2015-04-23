@@ -1,0 +1,4 @@
+#ifndef SHIFTED_QMC_HPP
+#define SHIFTED_QMC_HPP
+
+#endif // SHIFTED_QMC_HPP
