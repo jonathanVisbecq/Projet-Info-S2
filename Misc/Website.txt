@@ -2,3 +2,23 @@ http://www.proba.jussieu.fr/~pages/projets/
 
 login: mc2015
 passwd: gauss2015
+
+
+Phase I: Choix d'un et inscription sur le doodle suivant: Inscription et choix du sujet, avant le 31 janvier 2015.
+Pour l'inscription, les règles sont les suivantes:
+Inscrire les deux noms qui composent le binôme
+Choisir 1 seul sujet par binôme parmi les 32 projets
+Un sujet ne peut pas être choisi par plus 2 binômes
+Phase II: Vous téléchargez les documents nécessaires dans la liste ci-dessous...
+puis... vous travaillez intensement.
+
+Phase III: Le 30 avril 2015, vous rendez votre travail sous la forme d'un fichier compressé nommé Proj_X_Y.zip où X et Y sont les noms des auteurs. Le dossier compressé doit contenir UNIQUEMENT:
+Un fichier 'README.txt' qui indique le rôle des différents fichiers du répertoire
+Le code source compilable avec g++ (disponible dans tous les environnements): .c, .h, .cpp, .hpp (et .cu pour le CUDA) et un Makefile ou une règle de compilation (fichier texte qui indique l'ordre de compilation).
+Auncun code compilé: pas de .o, .a, .so, .dll
+Un rapport au format PDF portant le nom des auteurs X_Y.pdf doit être fourni (cf. document listant les projets pour des détails concernant son contenu).
+Envoyer EXCLUSIVEMENT par courriel à l'adresse suivante: 
+m2financep6@gmail.com
+
+Par EXCLUSIVEMENT nous entendons À l'EXCLUSION de toute autre adresse (destruction pure et simple de tout mail à une adresse differente). 
+Le sujet du courriel devra être : "Projet 2014-2015 (noms des auteurs)"
