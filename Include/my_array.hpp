@@ -8,7 +8,7 @@
 #ifndef MY_ARRAY_HPP
 #define MY_ARRAY_HPP
 
-#include <array>
+#include "stl_headers.hpp"
 
 /*
 	* Typedefs to emulate linear algebra vector/matrix calculus
@@ -34,6 +34,19 @@ Array<dim> operator+(const Array<dim>& a1, const Array<dim>& a2)
 }
 
 /*
+	* Substract two Arrays element-wise
+	*/
+template<size_t dim>
+Array<dim> operator-(const Array<dim>& a1, const Array<dim>& a2)
+{
+				Array<dim> a_tp(a1);
+				for(int i=0; i<dim; ++i)
+								a_tp.at(i) -= a2.at(i);
+
+				return a_tp;
+}
+
+/*
 	* Multiply two Arrays element-wise
 	*/
 template<size_t dim>
@@ -42,6 +55,32 @@ Array<dim> operator*(const Array<dim>& a1, const Array<dim>& a2)
 				Array<dim> a_tp(a1);
 				for(int i=0; i<dim; ++i)
 								a_tp.at(i) *= a2.at(i);
+
+				return a_tp;
+}
+
+/*
+	* Multiply an array by a scalar
+	*/
+template<size_t dim>
+Array<dim> operator*(const double& s, const Array<dim>& a)
+{
+				Array<dim> a_tp(a);
+				for(int i=0; i<dim; ++i)
+								a_tp.at(i) *= s;
+
+				return a_tp;
+}
+
+/*
+	* Divide an array by a scalar
+	*/
+template<size_t dim>
+Array<dim> operator/(const Array<dim>& a, const double& s)
+{
+				Array<dim> a_tp(a);
+				for(int i=0; i<dim; ++i)
+								a_tp.at(i) /= s;
 
 				return a_tp;
 }
@@ -65,16 +104,11 @@ Array<dim1> operator*(const Matrix<dim1,dim2>& m, const Array<dim2>& a)
 	* Scalar product of two Arrays
 	*/
 template<size_t dim>
-Array<dim> dot(const Array<dim>& a1, const Array<dim>& a2)
+inline
+double scalar_prod(const Array<dim>& a1, const Array<dim>& a2)
 {
-				double s = 0;
-				for(int i=0; i<dim; ++i)
-								s += a1.at(i) * a2.at(i);
-
-				return s;
+				return std::inner_product(a1.begin(),a1.end(),a2.begin(),0.);
 }
-
-
 
 
 /*
@@ -104,8 +138,6 @@ Matrix<dim1,dim2> makeFill(double val)
 				return m;
 }
 
-
-
 /*
 	* Overload to serialize Array<dim>
 	*/
@@ -117,5 +149,23 @@ std::ostream& operator<<(std::ostream& stream, const Array<dim>& a)
 
 				return stream;
 }
+
+/*
+	* Return indices that sort an array in descending order
+	*/
+template<size_t dim>
+std::array<unsigned,dim> sort_idx_desc(const Array<dim>& a)
+{
+				std::array<unsigned,dim> idx;
+				std::iota(idx.begin(), idx.end(), 0);
+
+				std::sort(
+								idx.begin(), idx.end(),
+								[&](unsigned i1, unsigned i2) { return a[i1] > a[i2]; }
+				);
+
+				return idx;
+}
+
 
 #endif // MY_ARRAY_HPP

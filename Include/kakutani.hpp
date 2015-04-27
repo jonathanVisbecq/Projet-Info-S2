@@ -1,17 +1,13 @@
 #ifndef KAKUTANI_HPP
 #define KAKUTANI_HPP
 
-#include <iostream>
-#include <functional>
-#include <algorithm>
-#include <cmath>
-
+#include "stl_headers.hpp"
 #include "my_array.hpp"
 #include "p_adic.hpp"
 
 /*************************************************************************************
-	*
 	* STRUCT Kakutani<dim>
+	* Generator
 	*
 	* Generator for Kakutani's sequences
 	*
@@ -71,8 +67,8 @@ std::ostream& operator<<(std::ostream &stream, const Kakutani<d>& k){
 
 
 /********************************************************************************************
-	*
 	* STRUCT Halton<dim>
+	* Generator
 	*
 	* Halton sequences are special cases of Kakutani sequences, but we can make the generation
 	* way faster: addition of 'P_Adic' objects is slow.
@@ -137,10 +133,14 @@ Halton<dim>::make_init_angle()
 }
 
 /********************************************************************************************
-	*
 	* STRUCT Halton_Fast<dim>
+	* Generator
 	*
 	* Faster than the previous version. Better for randomized QMC.
+	*
+	* From
+	* J. Struckmeier, Fast generation of low-discrepancy sequences. Journal of Computational
+	* and Applied Methematics, 91 (1995), 29–41
 	*
 	*******************************************************************************************/
 template<unsigned dim>

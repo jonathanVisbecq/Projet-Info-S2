@@ -1,16 +1,15 @@
 #ifndef FAURE_HPP
 #define FAURE_HPP
 
-#include <vector>
-#include <iostream>
+#include "stl_headers.hpp"
 
 #include "my_array.hpp"
 #include "p_adic.hpp"
 
 
 /*************************************************************************************
-	*
 	* STRUCT Faure<dim>
+	* Generator
 	*
 	* Generator for Faure's sequences
 	*

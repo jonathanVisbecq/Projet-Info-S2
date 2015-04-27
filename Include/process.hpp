@@ -1,11 +1,7 @@
 #ifndef PROCESS_HPP
 #define PROCESS_HPP
 
-#include <iostream>
-#include <functional>
-#include <algorithm>
-#include <cmath>
-
+#include "stl_headers.hpp"
 #include "gaussian_ind.hpp"
 
 /*************************************************************************************
@@ -146,29 +142,37 @@ struct Black_Scholes{
 
 				Black_Scholes() = delete;
 				Black_Scholes(double r,double sigma,double x0,const Array<t_dim>& times):
-								B_(times),
-								r_(r), sigma_(sigma), x0_(x0)
-				{
-								bs_func = [x0,r,sigma] (State s){
-												return State(s.first, x0 * std::exp( (r - 0.5*std::pow(sigma,2))*s.first + sigma*s.second ));
-								};
-				}
+								G_(), times_(times), r_(r), sigma_(sigma), x0_(x0) {}
 
 				result_type operator()(const Array<dim_alea>& pt)
 				{
-								val_tp = B_(pt);
-								std::transform(val_tp.begin(),val_tp.end(),val_tp.begin(),bs_func);
+								g = G_(pt);
+								S = x0_; t = 0.;
+
+								for(i=0; i<t_dim; ++i)
+								{
+												val_tp.at(i).first = times_.at(i);
+												val_tp.at(i).second = S * std::exp( (r_ - 0.5*sigma_*sigma_) * (times_.at(i) - t) +
+																																																sigma_
+																																																* std::sqrt(times_.at(i) - t) * g.at(i) );
+												t = val_tp.at(i).first;
+												S = val_tp.at(i).second;
+								}
+
 								return val_tp;
 				}
 
 protected:
-				StdBrownian<t_dim> B_;
+				Gaussian_Ind<t_dim> G_;
+				Array<t_dim> times_;
 				const double r_;
 				const double sigma_;
 				const double x0_;
 
-				std::function<State(State)> bs_func;
+				Array<t_dim> g;
 				result_type val_tp;
+				double S, t;
+				unsigned i;
 };
 
 

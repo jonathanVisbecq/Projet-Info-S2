@@ -4,23 +4,18 @@
 #include <functional>
 #include <random>
 #include <cmath>
+#include <vector>
 
-#include "rand_var.hpp"
-#include "process.hpp"
-#include "monte_carlo.hpp"
-#include "kakutani.hpp"
-#include "faure.hpp"
-#include "tore.hpp"
-#include "uniform_generator.hpp"
+#include "generator.hpp"
+#include "distribution.hpp"
 #include "payoff.hpp"
+#include "rand_var.hpp"
+#include "monte_carlo.hpp"
 #include "scripts.hpp"
 
 void test0()
 {
-				Uniform_Gen<2> u_gen;
-				Array<2> a = u_gen();
-
-				auto G = make_rvar(Gaussian_Ind<2>(),Halton_Fast<2>(a));
+				auto G = make_rvar(Gaussian_Ind<2>(),Halton<2>());
 
 				for(int i=0; i<1000; ++i)
 				{
@@ -48,7 +43,7 @@ void test2()
 {
 				Array<20> times = eq_spaced_times<20>(1);
 
-				auto B = make_rvar(StdBrownian<20>(times),SQRT<20>());
+				auto B = make_rvar(StdBrownian<20>(times),Halton<20>());
 
 				for(int i=0; i<100; ++i){
 								auto val = B();
@@ -70,7 +65,6 @@ void test3()
 								for(auto it=val.begin(); it!=val.end(); ++it)
 												std::cout  << it->first << "    " << it->second << std::endl;
 
-								std::cout << std::endl;
 				}
 }
 
@@ -105,7 +99,6 @@ void testMC1()
 				std::cout << MC.mean_est() << std::endl <<
 																	MC.time() << std::endl << std::endl;
 
-
 				// SQRT QMC
 				std::cout << "SQRT generator and M=" << M*N << std::endl;
 				SQRT<20> sqrt_gen;
@@ -113,7 +106,7 @@ void testMC1()
 				std::cout << MC.mean_est() << std::endl  <<
 																	MC.time() << std::endl << std::endl;
 
-				// Shifted SQRT QMC
+				// Shifted SQRT RQMC
 				std::cout << "Shifted SQRT generator; M=" << M << " ; N=" << N << std::endl;
 				auto sqmc = make_shifted_qmc(N,dist,sqrt_gen);
 				auto MC_shifted = make_mc(sqmc);
@@ -121,7 +114,7 @@ void testMC1()
 				MC_shifted(u_gen,M);
 				std::cout << MC_shifted << std::endl << std::endl;
 
-				// Random start Halton
+				// Random start Halton RQMC
 				std::cout << "Random start Halton generator; M=" << M << " ; N=" << N << std::endl;
 				auto rdHalt = make_randStart_halton(N,dist);
 				auto MC_rdStartHalt = make_mc(rdHalt);
@@ -149,12 +142,35 @@ int main(){
 //				testMC1();
 
 
-				compare_ciAndTime_MCvsRQMC();
+//				compare_ciAndTime_MCvsRQMC();
+
+//				compare_moments();
 
 
+//				std::vector<Uniform_Gen<2>> vecG(3,Uniform_Gen<2>());
+//				std::vector<unsigned> vecN(3);
+//				vecN.at(0) = 10;
+//				vecN.at(1) = 100;
+//				vecN.at(2) = 1000;
+
+//				parallelize(make_mc(Unit_Triangle()),vecG.begin(),vecG.end(),vecN.begin());
 
 
-    return 0;
+//				stratification_reproduce_convergence();
+
+//				stratification_reproduce_variance();
+
+//				stratification_reproduce_time();
+
+
+//				stratification_asian();
+
+//				rqmc_asian();
+
+				compare_on_asian();
+
+//				compare_on_gaussian();
+
 }
 
 

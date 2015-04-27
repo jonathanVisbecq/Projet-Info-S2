@@ -1,15 +1,14 @@
 #ifndef TORE_HPP
 #define TORE_HPP
 
-#include <cmath>
-
+#include "stl_headers.hpp"
 #include "p_adic.hpp"
 #include "my_array.hpp"
 
 
 /*************************************************************************************
-	*
 	* STRUCT Tore<dim>
+	* Generator
 	*
 	* Generator for Tore sequences
 	*
@@ -64,8 +63,8 @@ std::ostream& operator<<(std::ostream &stream, const Tore<d>& k){
 
 
 /*************************************************************************************
-	*
 	* STRUCT SQRT<dim>
+	* Generator
 	*
 	* Special case of Tore sequence, initialized with the first prime numbers
 	*

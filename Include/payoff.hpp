@@ -6,8 +6,7 @@
 #ifndef PAYOFF_HPP
 #define PAYOFF_HPP
 
-#include <functional>
-
+#include "stl_headers.hpp"
 #include "process.hpp"
 
 
@@ -40,21 +39,60 @@ template<unsigned t_dim>
 struct Asian_Call{
 
 				Asian_Call() = delete;
-				Asian_Call(double K): K_(K) {}
+				Asian_Call(double K, double r = 0., double T = 0.):
+								K_(K), r_(r), T_(T) {}
 
 				double operator()(const Process<t_dim>& proc)
 				{
+								s = 0.;
 								for(i=0; i<t_dim; ++i)
 												s += proc.at(i).second;
 
 								s /= t_dim;
 
-								return (s > K_) ? (s-K_): 0;
+								return (s > K_) ? std::exp(-r_*T_)*(s-K_) : 0.;
 				}
 
 
 protected:
-				const double K_;
+				double K_;
+				double r_;
+				double T_;
+
+				double s;
+				int i;
+
+};
+
+/*************************************************************************************
+	* STRUCT Asian_Put<t_dim>
+	*
+	* Return asian put payoff on a given process
+	*
+	*************************************************************************************/
+template<unsigned t_dim>
+struct Asian_Put{
+
+				Asian_Put() = delete;
+				Asian_Put(double K, double r = 0., double T = 1.):
+								K_(K), r_(r), T_(T) {}
+
+				double operator()(const Process<t_dim>& proc)
+				{
+								s = 0.;
+								for(i=0; i<t_dim; ++i)
+												s += proc.at(i).second;
+
+								s /= t_dim;
+
+								return (K_ > s) ? std::exp(-r_*T_)*(K_ - s) : 0.;
+				}
+
+
+protected:
+				double K_;
+				double r_;
+				double T_;
 
 				double s;
 				int i;
@@ -62,36 +100,6 @@ protected:
 };
 
 
-/*
-	* STRUCT Basket_Call<t_dim>
-	*
-	* Return basket call payoff on a given process
-	*
-	* ------------------------------------------------
-	* TODO: implement multidimensional processes
-	* ------------------------------------------------
-	*
-	*/
-
-/*
-template<unsigned t_dim>
-struct Basket_Call{
-
-				Basket_Call() = delete;
-				Basket_Call(const Array<t_dim>& alpha, double K): alpha_(alpha), K_(K) {}
-
-				double operator()(const Process<t_dim>& proc){
-								prod = dot(alpha_, proc_values(proc));
-								return (prod > K_) ? (prod - K_): 0;
-				}
-
-protected:
-				const Array<t_dim> alpha_;
-				const double K_;
-
-				double prod;
-};
-*/
 
 
 

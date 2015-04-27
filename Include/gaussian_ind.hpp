@@ -1,9 +1,7 @@
 #ifndef GAUSSIAN_IND_HPP
 #define GAUSSIAN_IND_HPP
 
-#define _USE_MATH_DEFINES
-#include <cmath>
-
+#include "stl_headers.hpp"
 #include "my_array.hpp"
 
 /*************************************************************************************
@@ -26,7 +24,7 @@ struct Gaussian_Ind{
 																	const Array<dim>& std = makeFill<dim>(1.)):
 								mean_(mean), std_(std) {}
 
-
+				// Use more pt than necessary but easier to use this way
 				result_type operator()(const Array<dim_alea>& pt){
 
 								for(i = 0; i<dim; ++i){
@@ -43,8 +41,8 @@ struct Gaussian_Ind{
 				}
 
 protected:
-				const Array<dim> mean_;
-				const Array<dim> std_;
+				Array<dim> mean_;
+				Array<dim> std_;
 
 				double R,theta,val1,val2;
 				Array<dim> val_tp;

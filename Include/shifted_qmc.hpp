@@ -1,9 +1,7 @@
 #ifndef SHIFTED_QMC_HPP
 #define SHIFTED_QMC_HPP
 
-#include <type_traits>
-#include <vector>
-
+#include "stl_headers.hpp"
 #include "my_array.hpp"
 
 /*************************************************************************************
@@ -33,7 +31,7 @@ struct Shifted_QMC{
 
 				double operator()(const Array<dim_alea>& pt)
 				{
-								x = 0;
+								x = 0.;
 								for(k=0; k<N_; ++k)
 								{
 												// Add both points and take the fractional part coordinate-wise

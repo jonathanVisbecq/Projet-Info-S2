@@ -1,13 +1,7 @@
 #ifndef P_ADIC_HPP
 #define P_ADIC_HPP
 
-#include <iostream>
-#include <list>
-#include <numeric>
-#include <functional>
-#include <cmath>
-#include <string>
-#include <vector>
+#include "stl_headers.hpp"
 
 /*
 	* Array of the first 255 prime numbers
@@ -58,11 +52,13 @@ struct P_Adic {
 				P_Adic(double x, int p);
 
 				// Cast to a real number in [0,1]^'ak_.size()'
-				operator double() {
+				operator double()
+				{
 								return std::inner_product(ak_.begin(), ak_.end(), ++pk_.begin(), 0.0, std::plus<double>(), std::divides<double>());
 				}
 
-				operator int() {
+				operator int()
+				{
 								return std::inner_product(ak_.begin(), ak_.end(), pk_.begin(), 0);
 				}
 
