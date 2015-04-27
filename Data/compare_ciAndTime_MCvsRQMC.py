@@ -25,7 +25,7 @@ ax2 = fig2.gca()
 ax2.plot(f[:,0],f[:,4:7])
 ax2.set_xlabel("M*n - log scale")
 ax2.set_xscale('log')
-ax2.set_ylabel("Half confidence interval - log scale")
+ax2.set_ylabel("Time (s) - log scale")
 ax2.set_yscale('log')
 ax2.legend(["Monte Carlo","Shifted QMC","Random-start Halton"],loc='best')
 
