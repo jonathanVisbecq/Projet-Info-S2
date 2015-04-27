@@ -1,0 +1,111 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[top=2in, bottom=0.4in, left=0.6in, right=0.6in]{geometry}
+\usepackage{pdfpages}
+\usepackage{tabularx}
+\usepackage{sidecap}
+\usepackage{subcaption}
+
+\usepackage[french]{babel}
+
+
+%Setting header parameters
+\addtolength{\voffset}{-72pt}
+
+\pagestyle{fancyplain}
+\setlength{\headheight}{50pt}
+\lhead{}
+\chead{}
+\rhead{}
+
+\renewcommand{\headrule}{
+	\begin{minipage}{\textwidth}
+		\textsl{\footnotesize Rapport de projet informatique} \hfill \textbf{\nouppercase{\leftmark}} \\
+		\vspace{-10pt}
+		\hrule 
+		\vspace{5pt}
+		\textsl{\footnotesize Stratification adaptative vs randomized QMC} \hfill 
+	\end{minipage}
+	\vspace{10pt}
+}
+
+
+\sidecaptionvpos{figure}{c}
+
+\newcommand{\partdiff}[2]{\frac{\partial #1}{\partial #2}}
+
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
+\titleformat{\chapter}[hang]{\bf\huge}{\thechapter}{2pc}{} 
+\titlespacing*{\chapter}{0pt}{-30pt}{25pt}
+
+\setlength{\parindent}{0pt}
+
+
+
+\newcommand{\function}[1]{\texttt{#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\esp}[1]{\mathbb{E}\left[ #1 \right]}
+\newcommand{\iid}{i.i.d.}
+
+\def \directory {}
+
+\author{Omar El-Euch, Jonathan Visbecq \\ Stratification adaptative vs randomized QMC}
+\title{\centering Master Probabilités et Finance: \\ \textbf{Rapport de projet informatique}}
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Présentation du sujet}
+
+\section{Sujet}
+Le sujet choisi est le suivant:
+\begin{center}
+\bf
+	2.21 Stratification adaptative vs randomized QMC
+\end{center}
+
+
+Comparer les performances des méthodes de stratification exposées dans \cite{EJ08} et de QMC randomisées exposées dans \cite{Tu04} sur les exemples présentés dans \cite{EJ08}.
+
+
+\section{Présentation mathématique des modèles}
+
+\subsection{Quasi-Monte Carlo randomisé}
+
+\subsection{Stratification adaptative}
+
+\chapter{Tests numériques du code C++}
+
+\section{Quasi-Monte Carlo randomisé}
+
+\subsection{Stratification adaptative}
+
+\chapter{Comparaison sur les exemples de \cite{EJ08}}
+
+\subsection{Loi normale standard}
+
+\subsection{Options asiatiques}
+
+%\begin{figure}[h!]
+%	\label{fig:conditionStabilite}
+%	\centering
+%	\includegraphics[scale=0.75]{}
+%	\includegraphics[scale=0.75]{}
+%	\caption{}
+%\end{figure}
+
+\chapter{Présentation du code C++}
+
+
+\bibliography{bibliographie}{}
+\bibliographystyle{alpha}
+\end{document}
