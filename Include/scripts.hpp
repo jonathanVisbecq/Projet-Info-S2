@@ -146,7 +146,7 @@ void compare_moments(const char* name)
 				std::cout << "Starting simulations..." << std::endl;
 
 
-				for(int n=1; n<=N_max; n=n+50)
+				for(int n=1; n<=N_max; n=n+100)
 				{
 								std::cout << n << std::endl;
 
@@ -170,9 +170,9 @@ void compare_moments(const char* name)
 								sqmc_2.at(n-1) = SQMC.var_est();
 								rsHalt_2.at(n-1) = RSHALT.var_est();
 
-								mc_3.at(n-1) = MC.moment_3_est() / std::pow(MC.st_dev_est(), 3);
-								sqmc_3.at(n-1) = SQMC.moment_3_est() / std::pow(SQMC.st_dev_est(), 3);
-								rsHalt_3.at(n-1) = RSHALT.moment_3_est() / std::pow(RSHALT.st_dev_est(), 3);
+								mc_3.at(n-1) = MC.moment_3_est();
+								sqmc_3.at(n-1) = SQMC.moment_3_est();
+								rsHalt_3.at(n-1) = RSHALT.moment_3_est();
 				}
 
 				std::cout << "Writing to stream..." << std::endl;
@@ -182,7 +182,7 @@ void compare_moments(const char* name)
 																							std::string(".dat");
 
 				std::ofstream stream(path);
-				for(int n=1; n<=N_max; n=n+50)
+				for(int n=1; n<=N_max; n=n+100)
 				{
 							stream << n*M << " " << mc_2.at(n-1)  << " " << sqmc_2.at(n-1)   << " " << rsHalt_2.at(n-1)
 																					<< " " << mc_3.at(n-1)  << " " << sqmc_3.at(n-1)   << " " << rsHalt_3.at(n-1)
@@ -350,9 +350,9 @@ void stratification_asian(Type type)
 				Array<dim> mu = makeFill<dim>(0.);
 
 				if(type==Type::CALL)
-								bisec(std::bind(eqn_func_call<dim>, _1, r, sigma, dt, K, S0, std::ref(mu)), -1e2, 2e2);
+								bisec(std::bind(eqn_func_call<dim>, _1, r, sigma, dt, K, S0, std::ref(mu)), 1e-2, 2e2);
 				else
-								bisec(std::bind(eqn_func_put<dim>, _1, r, sigma, dt, K, S0, std::ref(mu)), -1e2, 2e2);
+								bisec(std::bind(eqn_func_put<dim>, _1, r, sigma, dt, K, S0, std::ref(mu)), -2e2, 1e2);
 
 				Array<dim> u = mu / std::sqrt(scalar_prod(mu,mu));
 				u = ( std::signbit(u.at(0)) )? ((-1.) * u) : u;
@@ -365,7 +365,7 @@ void stratification_asian(Type type)
 
 				// Standard sratification
 				Stratification<Normal_Interval,dim,nb_strats> strat(payoff_mu, y, u, probs);
-				unsigned N_total = 500000;
+				unsigned N_total = 1000000;
 
 				strat(gen,N_total);
 
@@ -541,7 +541,7 @@ void compare_on_asian()
 
 				// Number of successive drawings
 
-				std::array<unsigned,17> N_strat;
+				std::array<unsigned,24> N_strat;
 				N_strat.at(0) = 500;
 				N_strat.at(1) = 1000;
 				N_strat.at(2) = 5000;
@@ -559,6 +559,13 @@ void compare_on_asian()
 				N_strat.at(14) = 800000;
 				N_strat.at(15) = 900000;
 				N_strat.at(16) = 1000000;
+				N_strat.at(17) = 1250000;
+				N_strat.at(18) = 1500000;
+				N_strat.at(19) = 2000000;
+				N_strat.at(20) = 4000000;
+				N_strat.at(21) = 6000000;
+				N_strat.at(22) = 8000000;
+				N_strat.at(23) = 10000000;
 
 				double N_last = 0.;
 				for(int k=0; k<N_strat.size(); ++k)
@@ -581,7 +588,6 @@ void compare_on_asian()
 					*/
 				std::cout << "RQMC" << std::endl;
 
-				Uniform_Gen<Black_Scholes<dim>::dim_alea> u_gen_rqmc;
 
 				Array<dim> times;
 				for(int i=1; i<=dim; ++i)
@@ -589,25 +595,27 @@ void compare_on_asian()
 
 					auto dist = compose_dist(Black_Scholes<dim>(r,sigma,S0,times), Asian_Type<dim>(K, r, T));
 
-					std::array<unsigned, 3> I;
-					I.at(0) = 800;
-					I.at(1) = 900;
-					I.at(2) = 1000;
+					std::array<unsigned, 1> I;
+					I.at(0) = 2000;
 
-					std::array<unsigned, 13> NI;
-					NI.at(0) = 1000;
-					NI.at(1) = 2500;
-					NI.at(2) = 5000;
-					NI.at(3) = 10000;
-					NI.at(4) = 20000;
-					NI.at(5) = 50000;
-					NI.at(6) = 100000;
-					NI.at(7) = 200000;
-					NI.at(8) = 350000;
-					NI.at(9) = 500000;
-					NI.at(10) = 800000;
-					NI.at(11) = 1000000;
-					NI.at(12) = 1200000;
+					std::array<unsigned, 17> NI;
+					NI.at(0) = 2500;
+					NI.at(1) = 5000;
+					NI.at(2) = 10000;
+					NI.at(3) = 20000;
+					NI.at(4) = 50000;
+					NI.at(5) = 100000;
+					NI.at(6) = 200000;
+					NI.at(7) = 350000;
+					NI.at(8) = 500000;
+					NI.at(9) = 800000;
+					NI.at(10) = 1000000;
+					NI.at(11) = 1200000;
+					NI.at(12) = 1400000;
+					NI.at(13) = 1800000;
+					NI.at(14) = 2000000;
+					NI.at(15) = 4000000;
+					NI.at(16) = 6000000;
 
 					for(int i=0; i<I.size(); ++i)
 					{
@@ -616,10 +624,10 @@ void compare_on_asian()
 													unsigned n = NI.at(ni) / I.at(i);
 													std::cout << I.at(i) << " " << n << std::endl;
 
+													Uniform_Gen_Fixed<Black_Scholes<dim>::dim_alea> u_gen_rqmc;
 													SQRT<Black_Scholes<dim>::dim_alea> sqrt_gen;
 													auto MC_sqmc = make_mc(make_shifted_qmc(n, dist, sqrt_gen));
 													auto MC_rdStart = make_mc(make_randStart_halton(n, dist));
-
 													MC_sqmc(u_gen_rqmc, I.at(i));
 													MC_rdStart(u_gen_rqmc, I.at(i));
 
@@ -636,22 +644,30 @@ void compare_on_asian()
 
 
 
-					std::ofstream stream_strat("../Data/compare_asian_strat.dat");
+					std::string path_strat = "../Data/compare_asian_strat_" + std::to_string(dim)
+
+																																				+ "_" + std::to_string(K) + ".dat";
+					std::ofstream stream_strat(path_strat);
 					for(int i=0; i<N_strat.size(); ++i)
 					{
 									stream_strat << N_strat.at(i) << " " << times_stratA.at(i)
 																																							<< " " << ci_stratA.at(i)
+																																							<< " " << mean_stratA.at(i)
 																																							<< std::endl;
 					}
 					stream_strat.close();
 
-					std::ofstream stream_rqmc("../Data/compare_asian_rqmc.dat");
+					std::string path_rqmc = "../Data/compare_asian_rqmc_" + std::to_string(dim)
+																													+ "_" + std::to_string(K) + ".dat";
+					std::ofstream stream_rqmc(path_rqmc);
 					for(int i=0; i<N_rqmc.size(); ++i)
 					{
 									stream_rqmc << N_rqmc.at(i) << " " << I_rqmc.at(i) << " " << times_sqmc.at(i)
 																																																													<< " " << times_rdStart.at(i)
 																																																													<< " " << ci_be_sqmc.at(i)
 																																																													<< " " << ci_be_rdStart.at(i)
+																																																													<< " " << mean_sqmc.at(i)
+																																																													<< " " << mean_rdStart.at(i)
 																																																													<< std::endl;
 					}
 					stream_rqmc.close();

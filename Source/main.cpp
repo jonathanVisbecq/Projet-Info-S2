@@ -167,9 +167,9 @@ int main(){
 
 //				rqmc_asian();
 
-				compare_on_asian();
+//				compare_on_asian();
 
-//				compare_on_gaussian();
+				compare_on_gaussian();
 
 }
 

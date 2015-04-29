@@ -1,4 +1,3 @@
-import sys
 import os
 import matplotlib.pyplot as plt
 import numpy as np
@@ -20,30 +19,27 @@ for func in xrange(1,6):
     
     f = np.genfromtxt(fname=path, delimiter=" ")
     
-    # Make figures
-    # Second moment
-    fig2 = plt.figure()
-    ax2 = fig2.gca()
-    ax2.plot(f[:,0],f[:,1:4])
-    ax2.set_xlabel("M*n - log scale")
-    ax2.set_xscale('log')
-    ax2.set_ylabel("Variance - log scale")
-    ax2.set_yscale('log')
-    ax2.legend(["Monte Carlo","Shifted QMC","Random-start Halton"],loc='best')
+    fig_sqmc = plt.figure()
+    ax_sqmc = fig_sqmc.gca()
+    ax_sqmc.plot(f[:,0],f[:,2]**(3./2.))
+    ax_sqmc.plot(f[:,0],f[:,5])
+    ax_sqmc.set_xlabel("M*n")
+    ax_sqmc.set_xscale('log')
+    ax_sqmc.set_yscale('log')
+    ax_sqmc.legend(["Std^3","Third Moment"],loc='best')
     
-    # Third moment
-    fig3 = plt.figure()
-    ax3 = fig3.gca()
-    ax3.plot(f[:,0],f[:,4:7])
-    ax3.set_xlabel("M*n - log scale")
-    ax3.set_xscale('log')
-    ax3.set_ylabel("Normalized Skewness - log scale")
-    ax3.set_yscale('log')
-    ax3.legend(["Monte Carlo","Shifted QMC","Random-start Halton"],loc='best')
+    fig_sqmc.savefig(target + "_func" + str(func) + "_sqmc.png",**save_params)
 
-    # Save figures
-    fig2.savefig(target + "_func" + str(func) + "_M2.png",**save_params)
-    fig3.savefig(target + "_func" + str(func) + "_M3.png",**save_params)
+    fig_rdStart = plt.figure()
+    ax_rdStart = fig_rdStart.gca()
+    ax_rdStart.plot(f[:,0],f[:,3]**(3./2.))
+    ax_rdStart.plot(f[:,0],f[:,6])
+    ax_rdStart.set_xlabel("M*n")
+    ax_rdStart.set_xscale('log')
+    ax_rdStart.set_yscale('log')
+    ax_rdStart.legend(["Std^3","Third Moment"],loc='best')
+    
+    fig_rdStart.savefig(target + "_func" + str(func) + "_rdStart.png",**save_params)
 
 
 

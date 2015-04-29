@@ -59,7 +59,7 @@ void compare_ciAndTime_MCvsRQMC()
 void compare_moments()
 {
 				constexpr unsigned M = 1000;
-				constexpr unsigned N_max = 1500;
+				constexpr unsigned N_max = 2000;
 
 				std::cout << "Function 1..." << std::endl;
 				compare_moments<M,N_max,Func_1>("func1");
@@ -303,7 +303,7 @@ void stratification_reproduce_time()
 
 void stratification_asian()
 {
-				{ std::ofstream("../Data/stratification_asian_call.dat"); }
+//				{ std::ofstream("../Data/stratification_asian_call.dat"); }
 				{ std::ofstream("../Data/stratification_asian_put.dat"); }
 
 				std::cout << "Call" << std::endl;
@@ -394,7 +394,7 @@ void compare_on_gaussian()
 
 				// Number of successive drawings
 
-				std::array<unsigned,17> N_strat;
+				std::array<unsigned,24> N_strat;
 				N_strat.at(0) = 500;
 				N_strat.at(1) = 1000;
 				N_strat.at(2) = 5000;
@@ -412,6 +412,13 @@ void compare_on_gaussian()
 				N_strat.at(14) = 800000;
 				N_strat.at(15) = 900000;
 				N_strat.at(16) = 1000000;
+				N_strat.at(17) = 1250000;
+				N_strat.at(18) = 1500000;
+				N_strat.at(19) = 2000000;
+				N_strat.at(20) = 4000000;
+				N_strat.at(21) = 6000000;
+				N_strat.at(22) = 8000000;
+				N_strat.at(23) = 10000000;
 
 				double N_last = 0.;
 				for(unsigned k=0; k<N_strat.size(); ++k)
@@ -434,29 +441,29 @@ void compare_on_gaussian()
 					*/
 				std::cout << "RQMC" << std::endl;
 
-				Uniform_Gen<Gaussian_Ind<1>::dim_alea> u_gen_rqmc;
-
 				auto dist = compose_dist(Gaussian_Ind<1>(), identity);
 
-				std::array<unsigned, 3> I;
-					I.at(0) = 800;
-					I.at(1) = 900;
-					I.at(2) = 1000;
+				std::array<unsigned, 1> I;
+					I.at(0) = 10000;
 
-					std::array<unsigned, 13> NI;
-					NI.at(0) = 1000;
-					NI.at(1) = 2500;
-					NI.at(2) = 5000;
-					NI.at(3) = 10000;
-					NI.at(4) = 20000;
-					NI.at(5) = 50000;
-					NI.at(6) = 100000;
-					NI.at(7) = 200000;
-					NI.at(8) = 350000;
-					NI.at(9) = 500000;
-					NI.at(10) = 800000;
-					NI.at(11) = 1000000;
-					NI.at(12) = 1200000;
+					std::array<unsigned, 17> NI;
+					NI.at(0) = 10000;
+					NI.at(1) = 20000;
+					NI.at(2) = 50000;
+					NI.at(3) = 100000;
+					NI.at(4) = 200000;
+					NI.at(5) = 350000;
+					NI.at(6) = 500000;
+					NI.at(7) = 800000;
+					NI.at(8) = 1000000;
+					NI.at(9) = 1200000;
+					NI.at(10) = 1400000;
+					NI.at(11) = 1800000;
+					NI.at(12) = 2000000;
+					NI.at(13) = 4000000;
+					NI.at(14) = 6000000;
+					NI.at(15) = 8000000;
+					NI.at(16) = 10000000;
 
 					for(unsigned i=0; i<I.size(); ++i)
 					{
@@ -465,6 +472,7 @@ void compare_on_gaussian()
 													unsigned n = NI.at(ni) / I.at(i);
 													std::cout << I.at(i) << " " << n << std::endl;
 
+													Uniform_Gen_Fixed<Gaussian_Ind<1>::dim_alea> u_gen_rqmc;
 													SQRT<Gaussian_Ind<1>::dim_alea> sqrt_gen;
 													auto MC_sqmc = make_mc(make_shifted_qmc(n, dist, sqrt_gen));
 													auto MC_rdStart = make_mc(make_randStart_halton(n, dist));
@@ -508,5 +516,14 @@ void compare_on_gaussian()
 
 void compare_on_asian()
 {
+				std::cout << "compare_on_asian" << std::endl;
+
+//				std::cout << "Dim: 16 and " << "K: 45" << std::endl;
+//				compare_on_asian<16,45,Asian_Call>();
+//				std::cout << "Dim: 16 and " << "K: 55" << std::endl;
+//				compare_on_asian<16,55,Asian_Call>();
+//				std::cout << "Dim: 64 and " << "K: 45" << std::endl;
+//				compare_on_asian<64,45,Asian_Call>();
+				std::cout << "Dim: 64 and " << "K: 55" << std::endl;
 				compare_on_asian<64,55,Asian_Call>();
 }

@@ -1,4 +1,4 @@
-/*************************************************************************************
+				/*************************************************************************************
 	* Distribution types, implemented with the following constraints:
 	*
 	*						- typedef 'result_type'
@@ -13,6 +13,7 @@
 
 #include "uniform.hpp"
 #include "gaussian_ind.hpp"
+#include "normal_interval.hpp"
 
 /*************************************************************************************
 	* Randomized QMC implemented as distributions
